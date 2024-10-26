@@ -1,7 +1,7 @@
 "use client";
 import { BlochSphere } from "@/components/bloch-sphere/bloch-sphere";
 import { ColorModeButton } from "@/components/ui/color-mode";
-import { Box, Center, HStack, Text } from "@chakra-ui/react";
+import { Box, Center, Stack, Text } from "@chakra-ui/react";
 
 export default function Home() {
   return (
@@ -13,15 +13,20 @@ export default function Home() {
       maxHeight={"100vh"}
       overflow={"hidden"}
     >
-      <Box position={"absolute"} top={4} right={4}>
+      <Box position={"absolute"} top={4} right={4} zIndex={100}>
         <ColorModeButton />
       </Box>
-      <HStack flex={1} alignItems={"stretch"}>
+      <Stack
+        direction={{ base: "column", md: "row" }}
+        flex={1}
+        alignItems={"stretch"}
+      >
         <Box
           flex={1}
           position={"relative"}
           display={"flex"}
           alignItems={"center"}
+          justifyContent={"center"}
           userSelect={"none"}
         >
           <Box
@@ -36,7 +41,7 @@ export default function Home() {
         <Center flex={1}>
           <Text>[config]</Text>
         </Center>
-      </HStack>
+      </Stack>
     </Box>
   );
 }
