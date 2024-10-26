@@ -35,6 +35,31 @@ const useArrowTransform = (direction: THREE.Vector3, length: number) => {
   return { shaftPosition, headPosition, arrowQuaternion };
 };
 
+// Function to create a circle at a given height (y-value) with a specified radius
+const HorizontalCircle = ({ radius, y }: { radius: number; y: number }) => {
+  const points = [];
+  for (let i = 0; i <= 64; i++) {
+    const angle = (i / 64) * Math.PI * 2;
+    points.push(
+      new THREE.Vector3(Math.cos(angle) * radius, y, Math.sin(angle) * radius),
+    );
+  }
+  return <Line points={points} color="gray" lineWidth={0.5} opacity={0.7} />;
+};
+
+// Function to create a vertical circle of the sphere at a given angle
+const VerticalCircle = ({ angle }: { angle: number }) => {
+  const points = [];
+  for (let i = -32; i <= 32; i++) {
+    const theta = (i / 32) * Math.PI; // From top (0) to bottom (π)
+    const x = Math.sin(theta) * Math.cos(angle);
+    const y = Math.cos(theta);
+    const z = Math.sin(theta) * Math.sin(angle);
+    points.push(new THREE.Vector3(x, y, z));
+  }
+  return <Line points={points} color="gray" lineWidth={0.5} opacity={0.7} />;
+};
+
 export const BlochSphere: React.FC<BlochSphereProps> = ({
   arrowDirection,
   arrowColor = "lightgreen",
@@ -68,6 +93,23 @@ export const BlochSphere: React.FC<BlochSphereProps> = ({
           side={THREE.DoubleSide}
         />
       </Sphere>
+
+      {/* Horizontal Circles */}
+      {[0.8, 0.4, 0, -0.4, -0.8].map((y) => (
+        <HorizontalCircle key={y} radius={Math.sqrt(1 - y * y)} y={y} />
+      ))}
+
+      {/* Vertical Circles */}
+      {[
+        0,
+        (1 * Math.PI) / 6,
+        (2 * Math.PI) / 6,
+        (3 * Math.PI) / 6,
+        (4 * Math.PI) / 6,
+        (5 * Math.PI) / 6,
+      ].map((angle) => (
+        <VerticalCircle key={angle} angle={angle} />
+      ))}
 
       {/* Axes: X, Y, Z */}
       <Line
