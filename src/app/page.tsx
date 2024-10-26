@@ -22,8 +22,14 @@ export default function Home() {
           position={"relative"}
           display={"flex"}
           alignItems={"center"}
+          userSelect={"none"}
         >
-          <Box position={"relative"} w={"100%"} aspectRatio={"square"}>
+          <Box
+            position={"relative"}
+            w={"100%"}
+            aspectRatio={"square"}
+            cursor={"pointer"}
+          >
             <BlochSphere />
           </Box>
         </Box>
