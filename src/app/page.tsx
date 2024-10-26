@@ -1,3 +1,5 @@
+"use client";
+import { BlochSphere } from "@/components/bloch-sphere/bloch-sphere";
 import { ColorModeButton } from "@/components/ui/color-mode";
 import { Box, Center, HStack, Text } from "@chakra-ui/react";
 
@@ -14,10 +16,17 @@ export default function Home() {
       <Box position={"absolute"} top={4} right={4}>
         <ColorModeButton />
       </Box>
-      <HStack flex={1}>
-        <Center flex={1}>
-          <Text>[sphere]</Text>
-        </Center>
+      <HStack flex={1} alignItems={"stretch"}>
+        <Box
+          flex={1}
+          position={"relative"}
+          display={"flex"}
+          alignItems={"center"}
+        >
+          <Box position={"relative"} w={"100%"} aspectRatio={"square"}>
+            <BlochSphere />
+          </Box>
+        </Box>
         <Center flex={1}>
           <Text>[config]</Text>
         </Center>
