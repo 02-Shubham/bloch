@@ -53,7 +53,7 @@ export const BlochSphere: React.FC<BlochSphereProps> = ({
   return (
     <Canvas camera={{ position: [3, 3, 3], fov: 35 }}>
       {/* Controls for panning and rotating */}
-      <OrbitControls enableZoom={true} zoomToCursor={false} />
+      <OrbitControls enableZoom={true} zoomToCursor={false} enablePan={false} />
 
       {/* Light sources */}
       <ambientLight intensity={0.5} />
