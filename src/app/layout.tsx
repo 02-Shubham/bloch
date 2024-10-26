@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import { Provider } from "@/components/ui/provider";
 
 export const metadata: Metadata = {
   title: "Bloch sphere simulator",
@@ -12,8 +12,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html suppressHydrationWarning lang="en">
+      <body>
+        <Provider>{children}</Provider>
+      </body>
     </html>
   );
 }
