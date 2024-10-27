@@ -3,6 +3,14 @@ import { BlochSphere } from "@/components/bloch-sphere/bloch-sphere";
 import { ColorModeButton } from "@/components/ui/color-mode";
 import { Box, Center, Stack, Text } from "@chakra-ui/react";
 
+import { Noto_Sans_Math } from "next/font/google";
+
+const notoSansMath = Noto_Sans_Math({
+  subsets: ["math"],
+  display: "swap",
+  weight: "400",
+});
+
 export default function Home() {
   return (
     <Box
@@ -34,6 +42,7 @@ export default function Home() {
             w={"100%"}
             aspectRatio={"square"}
             cursor={"pointer"}
+            className={notoSansMath.className}
           >
             <BlochSphere />
           </Box>

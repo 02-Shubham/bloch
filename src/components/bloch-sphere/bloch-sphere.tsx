@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, Vector3 } from "@react-three/fiber";
 import {
   OrbitControls,
   Sphere,
@@ -76,7 +76,7 @@ export const BlochSphere: React.FC<BlochSphereProps> = ({
   );
 
   return (
-    <Canvas camera={{ position: [3, 3, 3], fov: 35 }}>
+    <Canvas camera={{ position: [3, 3, 3], fov: 30 }}>
       {/* Controls for panning and rotating */}
       <OrbitControls enableZoom={true} zoomToCursor={false} enablePan={false} />
 
@@ -120,17 +120,6 @@ export const BlochSphere: React.FC<BlochSphereProps> = ({
         color={useColorModeValue("black", "white")}
         lineWidth={1}
       />
-      <Html position={[1.1, 0, 0]}>
-        <div
-          style={{
-            color: useColorModeValue("black", "white"),
-            fontWeight: "bold",
-          }}
-        >
-          x
-        </div>
-      </Html>
-
       <Line
         points={[
           [0, -1, 0],
@@ -139,17 +128,6 @@ export const BlochSphere: React.FC<BlochSphereProps> = ({
         color={useColorModeValue("black", "white")}
         lineWidth={1}
       />
-      <Html position={[0, 1.1, 0]}>
-        <div
-          style={{
-            color: useColorModeValue("black", "white"),
-            fontWeight: "bold",
-          }}
-        >
-          y
-        </div>
-      </Html>
-
       <Line
         points={[
           [0, 0, -1],
@@ -158,16 +136,48 @@ export const BlochSphere: React.FC<BlochSphereProps> = ({
         color={useColorModeValue("black", "white")}
         lineWidth={1}
       />
-      <Html position={[0, 0, 1.1]}>
-        <div
-          style={{
-            color: useColorModeValue("black", "white"),
-            fontWeight: "bold",
-          }}
-        >
-          z
-        </div>
-      </Html>
+
+      {/* Bases */}
+      {[
+        {
+          position: [0, 1.1, 0] as Vector3,
+          text: "∣0⟩",
+          color: useColorModeValue("black", "white"),
+        },
+        {
+          position: [0, -1.1, 0] as Vector3,
+          text: "∣1⟩",
+          color: useColorModeValue("black", "white"),
+        },
+        {
+          position: [1.1, 0, 0] as Vector3,
+          text: "∣+⟩",
+          color: useColorModeValue("black", "white"),
+        },
+        {
+          position: [-1.1, 0, 0] as Vector3,
+          text: "∣−⟩",
+          color: useColorModeValue("black", "white"),
+        },
+      ].map((item, index) => {
+        return (
+          <Html key={index} position={item.position}>
+            <div
+              style={{
+                fontSize: 18,
+                color: item.color,
+                width: "30px",
+                textAlign: "center",
+                verticalAlign: "middle",
+                lineHeight: "30px",
+                transform: "translateX(-15px) translateY(-15px)",
+              }}
+            >
+              {item.text}
+            </div>
+          </Html>
+        );
+      })}
 
       {/* Custom arrow */}
       <Cylinder
@@ -185,6 +195,8 @@ export const BlochSphere: React.FC<BlochSphereProps> = ({
       >
         <meshStandardMaterial color={arrowColor} />
       </Cone>
+
+      {/* <axesHelper args={[5]} /> */}
     </Canvas>
   );
 };
