@@ -11,10 +11,17 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 import { useColorModeValue } from "../ui/color-mode";
+import { ketToBlochVector } from "../../lib/ket-to-bloch-vector";
+
+export interface QuantumState {
+  a: { real: number; imag: number };
+  b: { real: number; imag: number };
+}
 
 export interface BlochSphereProps {
-  arrowDirection?: THREE.Vector3 | undefined;
+  arrowDirection?: QuantumState | undefined;
   arrowColor?: THREE.ColorRepresentation | undefined;
+  showAxesHelper?: boolean | undefined;
 }
 
 // Function to calculate position and rotation for the arrow based on direction
@@ -35,13 +42,13 @@ const useArrowTransform = (direction: THREE.Vector3, length: number) => {
   return { shaftPosition, headPosition, arrowQuaternion };
 };
 
-// Function to create a circle at a given height (y-value) with a specified radius
-const HorizontalCircle = ({ radius, y }: { radius: number; y: number }) => {
+// Function to create a circle at a given height (z-value) with a specified radius
+const HorizontalCircle = ({ radius, z }: { radius: number; z: number }) => {
   const points = [];
   for (let i = 0; i <= 64; i++) {
     const angle = (i / 64) * Math.PI * 2;
     points.push(
-      new THREE.Vector3(Math.cos(angle) * radius, y, Math.sin(angle) * radius),
+      new THREE.Vector3(Math.sin(angle) * radius, Math.cos(angle) * radius, z),
     );
   }
   return <Line points={points} color="gray" lineWidth={0.5} opacity={0.7} />;
@@ -52,9 +59,9 @@ const VerticalCircle = ({ angle }: { angle: number }) => {
   const points = [];
   for (let i = -32; i <= 32; i++) {
     const theta = (i / 32) * Math.PI; // From top (0) to bottom (π)
-    const x = Math.sin(theta) * Math.cos(angle);
-    const y = Math.cos(theta);
-    const z = Math.sin(theta) * Math.sin(angle);
+    const x = Math.sin(theta) * Math.sin(angle);
+    const y = Math.sin(theta) * Math.cos(angle);
+    const z = Math.cos(theta);
     points.push(new THREE.Vector3(x, y, z));
   }
   return <Line points={points} color="gray" lineWidth={0.5} opacity={0.7} />;
@@ -63,6 +70,7 @@ const VerticalCircle = ({ angle }: { angle: number }) => {
 export const BlochSphere: React.FC<BlochSphereProps> = ({
   arrowDirection,
   arrowColor = "lightgreen",
+  showAxesHelper = false,
 }) => {
   const arrowLength = 1;
   const shaftRadius = 0.02;
@@ -71,12 +79,20 @@ export const BlochSphere: React.FC<BlochSphereProps> = ({
 
   // Get arrow transform data
   const { shaftPosition, headPosition, arrowQuaternion } = useArrowTransform(
-    arrowDirection || new THREE.Vector3(0, 1, 0),
+    arrowDirection
+      ? ketToBlochVector(arrowDirection)
+      : ketToBlochVector({ a: { real: 1, imag: 0 }, b: { real: 0, imag: 0 } }),
     arrowLength,
   );
 
+  // Create the rotation matrix
+  const rotationMatrix = new THREE.Matrix4();
+  rotationMatrix.makeRotationFromEuler(
+    new THREE.Euler(-Math.PI / 2, 0, Math.PI, "XYZ"),
+  );
+
   return (
-    <Canvas camera={{ position: [3, 3, 3], fov: 30 }}>
+    <Canvas camera={{ position: [-3, 3, 3], fov: 30 }}>
       {/* Controls for panning and rotating */}
       <OrbitControls enableZoom={true} zoomToCursor={false} enablePan={false} />
 
@@ -84,119 +100,122 @@ export const BlochSphere: React.FC<BlochSphereProps> = ({
       <ambientLight intensity={0.5} />
       <pointLight position={[10, 10, 10]} />
 
-      {/* Sphere */}
-      <Sphere args={[1, 32, 32]}>
-        <meshStandardMaterial
-          transparent
-          opacity={useColorModeValue(0.05, 0.2)}
-          color={useColorModeValue("gray", "white")}
-          side={THREE.DoubleSide}
+      {/* Rotation */}
+      <group matrixAutoUpdate={false} matrix={rotationMatrix}>
+        {/* Sphere */}
+        <Sphere args={[1, 32, 32]}>
+          <meshStandardMaterial
+            transparent
+            opacity={useColorModeValue(0.05, 0.2)}
+            color={useColorModeValue("gray", "white")}
+            side={THREE.DoubleSide}
+          />
+        </Sphere>
+
+        {/* Horizontal Circles */}
+        {[0.8, 0.4, 0, -0.4, -0.8].map((z) => (
+          <HorizontalCircle key={z} radius={Math.sqrt(1 - z * z)} z={z} />
+        ))}
+
+        {/* Vertical Circles */}
+        {[
+          0,
+          (1 * Math.PI) / 6,
+          (2 * Math.PI) / 6,
+          (3 * Math.PI) / 6,
+          (4 * Math.PI) / 6,
+          (5 * Math.PI) / 6,
+        ].map((angle) => (
+          <VerticalCircle key={angle} angle={angle} />
+        ))}
+
+        {/* Axes: X, Y, Z */}
+        <Line
+          points={[
+            [-1, 0, 0],
+            [1, 0, 0],
+          ]} // X-axis line
+          color={useColorModeValue("black", "white")}
+          lineWidth={1}
         />
-      </Sphere>
+        <Line
+          points={[
+            [0, -1, 0],
+            [0, 1, 0],
+          ]} // Y-axis line
+          color={useColorModeValue("black", "white")}
+          lineWidth={1}
+        />
+        <Line
+          points={[
+            [0, 0, -1],
+            [0, 0, 1],
+          ]} // Z-axis line
+          color={useColorModeValue("black", "white")}
+          lineWidth={1}
+        />
 
-      {/* Horizontal Circles */}
-      {[0.8, 0.4, 0, -0.4, -0.8].map((y) => (
-        <HorizontalCircle key={y} radius={Math.sqrt(1 - y * y)} y={y} />
-      ))}
+        {/* Bases */}
+        {[
+          {
+            position: [0, 0, 1.1] as Vector3,
+            text: "∣0⟩",
+            color: useColorModeValue("black", "white"),
+          },
+          {
+            position: [0, 0, -1.1] as Vector3,
+            text: "∣1⟩",
+            color: useColorModeValue("black", "white"),
+          },
+          {
+            position: [1.1, 0, 0] as Vector3,
+            text: "∣+⟩",
+            color: useColorModeValue("black", "white"),
+          },
+          {
+            position: [-1.1, 0, 0] as Vector3,
+            text: "∣−⟩",
+            color: useColorModeValue("black", "white"),
+          },
+        ].map((item, index) => {
+          return (
+            <Html key={index} position={item.position}>
+              <div
+                style={{
+                  fontSize: 18,
+                  color: item.color,
+                  width: "30px",
+                  textAlign: "center",
+                  verticalAlign: "middle",
+                  lineHeight: "30px",
+                  transform: "translateX(-15px) translateY(-15px)",
+                }}
+              >
+                {item.text}
+              </div>
+            </Html>
+          );
+        })}
 
-      {/* Vertical Circles */}
-      {[
-        0,
-        (1 * Math.PI) / 6,
-        (2 * Math.PI) / 6,
-        (3 * Math.PI) / 6,
-        (4 * Math.PI) / 6,
-        (5 * Math.PI) / 6,
-      ].map((angle) => (
-        <VerticalCircle key={angle} angle={angle} />
-      ))}
+        {/* Custom arrow */}
+        <Cylinder
+          args={[shaftRadius, shaftRadius, arrowLength - headLength, 32]}
+          position={[shaftPosition.x, shaftPosition.y, shaftPosition.z]}
+          quaternion={arrowQuaternion}
+        >
+          <meshStandardMaterial color={arrowColor} />
+        </Cylinder>
 
-      {/* Axes: X, Y, Z */}
-      <Line
-        points={[
-          [-1, 0, 0],
-          [1, 0, 0],
-        ]} // X-axis line
-        color={useColorModeValue("black", "white")}
-        lineWidth={1}
-      />
-      <Line
-        points={[
-          [0, -1, 0],
-          [0, 1, 0],
-        ]} // Y-axis line
-        color={useColorModeValue("black", "white")}
-        lineWidth={1}
-      />
-      <Line
-        points={[
-          [0, 0, -1],
-          [0, 0, 1],
-        ]} // Z-axis line
-        color={useColorModeValue("black", "white")}
-        lineWidth={1}
-      />
+        <Cone
+          args={[headWidth, headLength, 32]}
+          position={[headPosition.x, headPosition.y, headPosition.z]}
+          quaternion={arrowQuaternion}
+        >
+          <meshStandardMaterial color={arrowColor} />
+        </Cone>
 
-      {/* Bases */}
-      {[
-        {
-          position: [0, 1.1, 0] as Vector3,
-          text: "∣0⟩",
-          color: useColorModeValue("black", "white"),
-        },
-        {
-          position: [0, -1.1, 0] as Vector3,
-          text: "∣1⟩",
-          color: useColorModeValue("black", "white"),
-        },
-        {
-          position: [1.1, 0, 0] as Vector3,
-          text: "∣+⟩",
-          color: useColorModeValue("black", "white"),
-        },
-        {
-          position: [-1.1, 0, 0] as Vector3,
-          text: "∣−⟩",
-          color: useColorModeValue("black", "white"),
-        },
-      ].map((item, index) => {
-        return (
-          <Html key={index} position={item.position}>
-            <div
-              style={{
-                fontSize: 18,
-                color: item.color,
-                width: "30px",
-                textAlign: "center",
-                verticalAlign: "middle",
-                lineHeight: "30px",
-                transform: "translateX(-15px) translateY(-15px)",
-              }}
-            >
-              {item.text}
-            </div>
-          </Html>
-        );
-      })}
-
-      {/* Custom arrow */}
-      <Cylinder
-        args={[shaftRadius, shaftRadius, arrowLength - headLength, 32]}
-        position={[shaftPosition.x, shaftPosition.y, shaftPosition.z]}
-        quaternion={arrowQuaternion}
-      >
-        <meshStandardMaterial color={arrowColor} />
-      </Cylinder>
-
-      <Cone
-        args={[headWidth, headLength, 32]}
-        position={[headPosition.x, headPosition.y, headPosition.z]}
-        quaternion={arrowQuaternion}
-      >
-        <meshStandardMaterial color={arrowColor} />
-      </Cone>
-
-      {/* <axesHelper args={[5]} /> */}
+        {showAxesHelper && <axesHelper args={[5]} />}
+      </group>
     </Canvas>
   );
 };

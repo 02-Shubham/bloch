@@ -44,7 +44,12 @@ export default function Home() {
             cursor={"pointer"}
             className={notoSansMath.className}
           >
-            <BlochSphere />
+            <BlochSphere
+              arrowDirection={{
+                a: { real: 0.6, imag: 0 },
+                b: { real: 0, imag: 0.8 },
+              }}
+            />
           </Box>
         </Box>
         <Center flex={1}>
