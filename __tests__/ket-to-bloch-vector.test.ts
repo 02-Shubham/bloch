@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { ketToBlochVector } from "../src/lib/ket-to-bloch-vector";
+import { ketToBlochVector } from "@/lib/ket-to-bloch-vector";
 
 describe("ketToBlochVector", () => {
   const epsilon = 1e-6; // Tolerance for floating-point comparisons

@@ -1,4 +1,4 @@
-import { QuantumState } from "@/components/bloch-sphere/bloch-sphere";
+import { QuantumState } from "@/types/bloch";
 import * as THREE from "three";
 
 /**

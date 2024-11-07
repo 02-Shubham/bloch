@@ -1,6 +1,7 @@
 "use client";
 import { BlochSphere } from "@/components/bloch-sphere/bloch-sphere";
 import { ColorModeButton } from "@/components/ui/color-mode";
+import { useAppContext } from "@/state/app-context";
 import { Box, Center, Stack, Text } from "@chakra-ui/react";
 
 import { Noto_Sans_Math } from "next/font/google";
@@ -12,6 +13,8 @@ const notoSansMath = Noto_Sans_Math({
 });
 
 export default function Home() {
+  const { initialState } = useAppContext();
+
   return (
     <Box
       display={"flex"}
@@ -44,12 +47,7 @@ export default function Home() {
             cursor={"pointer"}
             className={notoSansMath.className}
           >
-            <BlochSphere
-              arrowDirection={{
-                a: { real: 0.6, imag: 0 },
-                b: { real: 0, imag: 0.8 },
-              }}
-            />
+            <BlochSphere arrowDirection={initialState} />
           </Box>
         </Box>
         <Center flex={1}>

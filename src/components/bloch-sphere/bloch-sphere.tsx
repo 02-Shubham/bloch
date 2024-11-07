@@ -10,13 +10,9 @@ import {
   Cone,
 } from "@react-three/drei";
 import * as THREE from "three";
-import { useColorModeValue } from "../ui/color-mode";
-import { ketToBlochVector } from "../../lib/ket-to-bloch-vector";
-
-export interface QuantumState {
-  a: { real: number; imag: number };
-  b: { real: number; imag: number };
-}
+import { useColorModeValue } from "@/components/ui/color-mode";
+import { ketToBlochVector } from "@/lib/ket-to-bloch-vector";
+import { QuantumState } from "@/types/bloch";
 
 export interface BlochSphereProps {
   arrowDirection?: QuantumState | undefined;
