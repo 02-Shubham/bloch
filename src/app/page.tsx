@@ -53,7 +53,7 @@ export default function Home() {
           >
             <BlochSphere
               arrowDirection={history[history.length - 1].currentState}
-              showAxesHelpers={showAxesHelper}
+              showAxesHelper={showAxesHelper}
             />
           </Box>
         </Box>
