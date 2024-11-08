@@ -1,8 +1,9 @@
 "use client";
 import { BlochSphere } from "@/components/bloch-sphere/bloch-sphere";
+import { ConfigSection } from "@/components/config-section/config-section";
 import { ColorModeButton } from "@/components/ui/color-mode";
 import { useAppContext } from "@/state/app-context";
-import { Box, Center, Stack, Text } from "@chakra-ui/react";
+import { Box, Stack, VStack } from "@chakra-ui/react";
 
 import { Noto_Sans_Math } from "next/font/google";
 
@@ -13,7 +14,10 @@ const notoSansMath = Noto_Sans_Math({
 });
 
 export default function Home() {
-  const { initialState } = useAppContext();
+  const {
+    history,
+    settings: { showAxesHelper },
+  } = useAppContext();
 
   return (
     <Box
@@ -24,7 +28,7 @@ export default function Home() {
       maxHeight={"100vh"}
       overflow={"hidden"}
     >
-      <Box position={"absolute"} top={4} right={4} zIndex={100}>
+      <Box position={"absolute"} top={2} right={2} zIndex={100}>
         <ColorModeButton />
       </Box>
       <Stack
@@ -47,12 +51,15 @@ export default function Home() {
             cursor={"pointer"}
             className={notoSansMath.className}
           >
-            <BlochSphere arrowDirection={initialState} />
+            <BlochSphere
+              arrowDirection={history[history.length - 1].currentState}
+              showAxesHelpers={showAxesHelper}
+            />
           </Box>
         </Box>
-        <Center flex={1}>
-          <Text>[config]</Text>
-        </Center>
+        <VStack flex={1} gap={16} paddingY={16} overflowY={"scroll"}>
+          <ConfigSection />
+        </VStack>
       </Stack>
     </Box>
   );

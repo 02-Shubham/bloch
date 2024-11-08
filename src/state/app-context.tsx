@@ -1,18 +1,43 @@
 "use client";
 import { Gate, QuantumState } from "@/types/bloch";
-import { createContext, useContext } from "react";
+import {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useState,
+} from "react";
 
-export interface AppContextType {
-  initialState: QuantumState;
-  history: { currentState: QuantumState; gateUsed: Gate }[];
+export interface HistoryItem {
+  currentState: QuantumState;
+  gateUsed: Gate;
 }
 
+export interface AppContextType {
+  history: HistoryItem[];
+  pushState: (newState: HistoryItem) => void;
+  popState: () => void;
+  resetHistory: () => void;
+  settings: {
+    showAxesHelper: boolean;
+    changeShowAxesHelper: Dispatch<SetStateAction<boolean>>;
+  };
+}
+
+const INITIAL_QUANTUM_STATE: QuantumState = {
+  a: { real: 1, imag: 0 },
+  b: { real: 0, imag: 0 },
+};
+
 export const AppContext = createContext<AppContextType>({
-  initialState: {
-    a: { real: 0.6, imag: 0 },
-    b: { real: 0, imag: 0.8 },
-  },
   history: [],
+  pushState: () => null,
+  popState: () => null,
+  resetHistory: () => null,
+  settings: {
+    showAxesHelper: false,
+    changeShowAxesHelper: () => null,
+  },
 });
 
 export const AppContextProvider = ({
@@ -20,14 +45,36 @@ export const AppContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const [history, changeHistory] = useState<AppContextType["history"]>([
+    { currentState: INITIAL_QUANTUM_STATE, gateUsed: { name: "init" } },
+  ]);
+  const [showAxesHelper, changeShowAxesHelper] = useState(false);
+
+  const pushState = (newState: HistoryItem) => {
+    changeHistory([...history, newState]);
+  };
+
+  const popState = () => {
+    changeHistory(history.splice(0, history.length - 1));
+  };
+
+  const resetHistory = () => {
+    changeHistory([
+      { currentState: INITIAL_QUANTUM_STATE, gateUsed: { name: "init" } },
+    ]);
+  };
+
   return (
     <AppContext.Provider
       value={{
-        initialState: {
-          a: { real: 0.6, imag: 0 },
-          b: { real: 0, imag: 0.8 },
+        history,
+        pushState,
+        popState,
+        resetHistory,
+        settings: {
+          showAxesHelper,
+          changeShowAxesHelper,
         },
-        history: [],
       }}
     >
       {children}
