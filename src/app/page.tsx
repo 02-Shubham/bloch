@@ -16,6 +16,7 @@ const notoSansMath = Noto_Sans_Math({
 export default function Home() {
   const {
     history,
+    currentHistoryIndex,
     settings: { showAxesHelper },
   } = useAppContext();
 
@@ -52,7 +53,13 @@ export default function Home() {
             className={notoSansMath.className}
           >
             <BlochSphere
-              arrowDirection={history[history.length - 1].currentState}
+              arrowDirection={
+                history[
+                  currentHistoryIndex > history.length - 1
+                    ? 0
+                    : currentHistoryIndex
+                ].currentState
+              }
               showAxesHelper={showAxesHelper}
             />
           </Box>

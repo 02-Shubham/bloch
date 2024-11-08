@@ -1,4 +1,5 @@
 "use client";
+import { applyGateToState } from "@/lib/apply-gate";
 import { Gate, QuantumState } from "@/types/bloch";
 import {
   createContext,
@@ -15,9 +16,11 @@ export interface HistoryItem {
 
 export interface AppContextType {
   history: HistoryItem[];
-  pushState: (newState: HistoryItem) => void;
-  popState: () => void;
-  resetHistory: () => void;
+  currentHistoryIndex: number;
+  applyGate: (gate: Gate) => void;
+  undo: () => void;
+  redo: () => void;
+  resetHistory: (toState?: QuantumState) => void;
   settings: {
     showAxesHelper: boolean;
     changeShowAxesHelper: Dispatch<SetStateAction<boolean>>;
@@ -31,8 +34,10 @@ const INITIAL_QUANTUM_STATE: QuantumState = {
 
 export const AppContext = createContext<AppContextType>({
   history: [],
-  pushState: () => null,
-  popState: () => null,
+  currentHistoryIndex: 0,
+  applyGate: () => null,
+  undo: () => null,
+  redo: () => null,
   resetHistory: () => null,
   settings: {
     showAxesHelper: false,
@@ -45,31 +50,47 @@ export const AppContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [history, changeHistory] = useState<AppContextType["history"]>([
+  const [history, setHistory] = useState<AppContextType["history"]>([
     { currentState: INITIAL_QUANTUM_STATE, gateUsed: { name: "init" } },
   ]);
+  const [currentHistoryIndex, setCurrentHistoryIndex] = useState(0);
   const [showAxesHelper, changeShowAxesHelper] = useState(false);
 
-  const pushState = (newState: HistoryItem) => {
-    changeHistory([...history, newState]);
+  const applyGate = (gate: Gate) => {
+    const newItem: HistoryItem = {
+      currentState: applyGateToState(
+        history[currentHistoryIndex].currentState,
+        gate,
+      ),
+      gateUsed: gate,
+    };
+    setHistory([...history.slice(0, currentHistoryIndex + 1), newItem]);
+    setCurrentHistoryIndex(currentHistoryIndex + 1);
   };
 
-  const popState = () => {
-    changeHistory(history.splice(0, history.length - 1));
+  const undo = () => {
+    if (currentHistoryIndex > 0)
+      setCurrentHistoryIndex(currentHistoryIndex - 1);
   };
 
-  const resetHistory = () => {
-    changeHistory([
-      { currentState: INITIAL_QUANTUM_STATE, gateUsed: { name: "init" } },
-    ]);
+  const redo = () => {
+    if (currentHistoryIndex < history.length - 1)
+      setCurrentHistoryIndex(currentHistoryIndex + 1);
+  };
+
+  const resetHistory = (toState: QuantumState = INITIAL_QUANTUM_STATE) => {
+    setCurrentHistoryIndex(0);
+    setHistory([{ currentState: toState, gateUsed: { name: "init" } }]);
   };
 
   return (
     <AppContext.Provider
       value={{
         history,
-        pushState,
-        popState,
+        currentHistoryIndex,
+        applyGate,
+        undo,
+        redo,
         resetHistory,
         settings: {
           showAxesHelper,

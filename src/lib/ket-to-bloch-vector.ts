@@ -38,9 +38,9 @@ export function ketToBlochVector({ a, b }: QuantumState): THREE.Vector3 {
   const y = Math.sin(theta) * Math.sin(phi);
   const z = Math.cos(theta);
 
-  console.log(
+  /*console.log(
     `FROM\n(${a.real} + ${a.imag}i) * |0⟩ + (${b.real} + ${b.imag}i) * |1⟩\nTO\n{x: ${x}, y: ${y}, z: ${z}}`,
-  );
+    );*/
 
   return new THREE.Vector3(x, y, z);
 }
