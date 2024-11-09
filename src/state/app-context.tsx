@@ -25,7 +25,9 @@ export interface AppContextType {
   canRedo: () => boolean;
   settings: {
     showAxesHelper: boolean;
-    changeShowAxesHelper: Dispatch<SetStateAction<boolean>>;
+    setShowAxesHelper: Dispatch<SetStateAction<boolean>>;
+    showStats: boolean;
+    setShowStats: Dispatch<SetStateAction<boolean>>;
   };
 }
 
@@ -45,7 +47,9 @@ export const AppContext = createContext<AppContextType>({
   canRedo: () => false,
   settings: {
     showAxesHelper: false,
-    changeShowAxesHelper: () => null,
+    setShowAxesHelper: () => null,
+    showStats: false,
+    setShowStats: () => null,
   },
 });
 
@@ -58,7 +62,8 @@ export const AppContextProvider = ({
     { currentState: INITIAL_QUANTUM_STATE, gateUsed: { name: "init" } },
   ]);
   const [currentHistoryIndex, setCurrentHistoryIndex] = useState(0);
-  const [showAxesHelper, changeShowAxesHelper] = useState(false);
+  const [showAxesHelper, setShowAxesHelper] = useState(false);
+  const [showStats, setShowStats] = useState(false);
 
   const applyGate = (gate: Gate) => {
     const newItem: HistoryItem = {
@@ -101,7 +106,9 @@ export const AppContextProvider = ({
         canRedo,
         settings: {
           showAxesHelper,
-          changeShowAxesHelper,
+          setShowAxesHelper,
+          showStats,
+          setShowStats,
         },
       }}
     >

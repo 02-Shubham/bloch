@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import { Canvas, Vector3 } from "@react-three/fiber";
 import {
   OrbitControls,
@@ -8,6 +8,7 @@ import {
   Html,
   Cylinder,
   Cone,
+  Stats,
 } from "@react-three/drei";
 import * as THREE from "three";
 import { useColorModeValue } from "@/components/ui/color-mode";
@@ -18,6 +19,7 @@ export interface BlochSphereProps {
   arrowDirection?: QuantumState | undefined;
   arrowColor?: THREE.ColorRepresentation | undefined;
   showAxesHelper?: boolean | undefined;
+  showStats?: boolean | undefined;
 }
 
 // Function to calculate position and rotation for the arrow based on direction
@@ -65,8 +67,9 @@ const VerticalCircle = ({ angle }: { angle: number }) => {
 
 export const BlochSphere: React.FC<BlochSphereProps> = ({
   arrowDirection,
-  arrowColor = "lightgreen",
+  arrowColor = new THREE.Color(0x7dfff8),
   showAxesHelper = false,
+  showStats = false,
 }) => {
   const arrowLength = 1;
   const shaftRadius = 0.02;
@@ -211,6 +214,8 @@ export const BlochSphere: React.FC<BlochSphereProps> = ({
         </Cone>
 
         {showAxesHelper && <axesHelper args={[5]} />}
+
+        {showStats && <Stats />}
       </group>
     </Canvas>
   );

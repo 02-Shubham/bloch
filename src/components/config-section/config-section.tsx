@@ -22,7 +22,7 @@ import {
 
 export const ConfigSection: React.FC = () => {
   const {
-    settings: { showAxesHelper, changeShowAxesHelper },
+    settings: { showAxesHelper, setShowAxesHelper, showStats, setShowStats },
     undo,
     redo,
     resetHistory,
@@ -125,7 +125,7 @@ export const ConfigSection: React.FC = () => {
                     <TimelineItem key={index}>
                       <TimelineConnector
                         {...(index === reversedCurrentHistoryIndex
-                          ? { bg: "teal.solid", color: "teal.contrast" }
+                          ? { bg: "#317572", color: "teal.contrast" }
                           : index > reversedCurrentHistoryIndex
                             ? { bg: "gray.solid", color: "gray.contrast" }
                             : {})}
@@ -139,7 +139,11 @@ export const ConfigSection: React.FC = () => {
                         )}
                       </TimelineConnector>
                       <TimelineContent>
-                        <TimelineTitle>{`${item.gateUsed.name} gate used`}</TimelineTitle>
+                        <TimelineTitle>
+                          {item.gateUsed.name === "init"
+                            ? "Initialized with ∣0⟩"
+                            : `${item.gateUsed.name} gate used`}
+                        </TimelineTitle>
                         {/* <TimelineDescription>13th May 2021</TimelineDescription> */}
                       </TimelineContent>
                     </TimelineItem>
@@ -151,13 +155,22 @@ export const ConfigSection: React.FC = () => {
         </VStack>
       </CollapsibleCard>
       <CollapsibleCard title="Settings">
-        <Checkbox
-          variant={"subtle"}
-          checked={showAxesHelper}
-          onCheckedChange={(e) => changeShowAxesHelper(!!e.checked)}
-        >
-          Show axes helper (X: red. Y: green. Z: blue)
-        </Checkbox>
+        <VStack gap={4} alignSelf={"stretch"} alignItems={"stretch"}>
+          <Checkbox
+            variant={"subtle"}
+            checked={showAxesHelper}
+            onCheckedChange={(e) => setShowAxesHelper(!!e.checked)}
+          >
+            Show axes helper (X: red. Y: green. Z: blue)
+          </Checkbox>
+          <Checkbox
+            variant={"subtle"}
+            checked={showStats}
+            onCheckedChange={(e) => setShowStats(!!e.checked)}
+          >
+            Show stats
+          </Checkbox>
+        </VStack>
       </CollapsibleCard>
     </VStack>
   );

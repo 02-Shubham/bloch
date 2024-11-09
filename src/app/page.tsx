@@ -17,7 +17,7 @@ export default function Home() {
   const {
     history,
     currentHistoryIndex,
-    settings: { showAxesHelper },
+    settings: { showAxesHelper, showStats },
   } = useAppContext();
 
   return (
@@ -28,6 +28,7 @@ export default function Home() {
       maxWidth={"100vw"}
       maxHeight={"100vh"}
       overflow={"hidden"}
+      className={notoSansMath.className}
     >
       <Box position={"absolute"} top={"6px"} right={"6px"} zIndex={100}>
         <ColorModeButton />
@@ -50,7 +51,6 @@ export default function Home() {
             w={"100%"}
             aspectRatio={"square"}
             cursor={"pointer"}
-            className={notoSansMath.className}
           >
             <BlochSphere
               arrowDirection={
@@ -61,6 +61,7 @@ export default function Home() {
                 ].currentState
               }
               showAxesHelper={showAxesHelper}
+              showStats={showStats}
             />
           </Box>
         </Box>
