@@ -16,7 +16,7 @@ export type Gate =
   | {
       name: "P";
       matrix: { _00: Complex; _01: Complex; _10: Complex; _11: Complex };
-      theta: number;
+      phi: number;
       originalExpression?: string | undefined;
     }
   | {

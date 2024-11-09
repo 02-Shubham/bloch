@@ -39,16 +39,16 @@ export const ConfigSection: React.FC = () => {
     resetRotation,
   } = useAppContext();
 
-  const [thetaExpression, setThetaExpression] = useState("pi/2");
-  const [thetaError, setThetaError] = useState(false);
-  const [calculatedThetaExpression, setCalculatedThetaExpression] = useState(
+  const [phiExpression, setPhiExpression] = useState("pi/2");
+  const [phiError, setPhiError] = useState(false);
+  const [calculatedPhiExpression, setCalculatedPhiExpression] = useState(
     Math.PI / 2,
   );
   const inputBorderColor = useColorModeValue("gray.100", "gray.900");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    setThetaExpression(newValue);
+    setPhiExpression(newValue);
 
     const TOLERANCE = 1e-12;
 
@@ -56,10 +56,10 @@ export const ConfigSection: React.FC = () => {
       const value = math.evaluate(newValue);
 
       if (value === undefined) {
-        setThetaError(true);
+        setPhiError(true);
       } else if (typeof value === "number") {
-        setThetaError(false);
-        setCalculatedThetaExpression(value);
+        setPhiError(false);
+        setCalculatedPhiExpression(value);
       } else if (
         value.im !== undefined &&
         value.re !== undefined &&
@@ -67,13 +67,13 @@ export const ConfigSection: React.FC = () => {
         typeof value.re === "number" &&
         Math.abs(value.im) < TOLERANCE
       ) {
-        setThetaError(false);
-        setCalculatedThetaExpression(value.re);
+        setPhiError(false);
+        setCalculatedPhiExpression(value.re);
       } else {
-        setThetaError(true);
+        setPhiError(true);
       }
     } catch (_err) {
-      setThetaError(true);
+      setPhiError(true);
     }
   };
 
@@ -120,19 +120,19 @@ export const ConfigSection: React.FC = () => {
               size={"sm"}
               variant={"subtle"}
               onClick={() =>
-                applyGate(PGate(calculatedThetaExpression, thetaExpression))
+                applyGate(PGate(calculatedPhiExpression, phiExpression))
               }
-              disabled={thetaError}
+              disabled={phiError}
             >
-              <strong>P</strong>(θ =
+              <strong>P</strong>(ϕ =
             </Button>
             <Input
               size={"sm"}
               placeholder="e.g., e^(i*pi/sqrt(2))"
-              value={thetaExpression}
+              value={phiExpression}
               onChange={handleChange}
               borderRadius={0}
-              borderColor={thetaError ? "border.error" : inputBorderColor}
+              borderColor={phiError ? "border.error" : inputBorderColor}
               width={"150px"}
               marginRight={0}
               _focus={{ outline: 0 }}
@@ -142,9 +142,9 @@ export const ConfigSection: React.FC = () => {
               size={"sm"}
               variant={"subtle"}
               onClick={() =>
-                applyGate(PGate(calculatedThetaExpression, thetaExpression))
+                applyGate(PGate(calculatedPhiExpression, phiExpression))
               }
-              disabled={thetaError}
+              disabled={phiError}
             >
               )
             </Button>
@@ -206,7 +206,7 @@ export const ConfigSection: React.FC = () => {
                         <TimelineTitle>
                           {item.gateUsed.name === "init"
                             ? "Initialized with ∣0⟩"
-                            : `${item.gateUsed.name} gate used${item.gateUsed.name === "P" ? ` with parameter θ = ${item.gateUsed.originalExpression ?? item.gateUsed.theta}` : ""}`}
+                            : `${item.gateUsed.name} gate used${item.gateUsed.name === "P" ? ` with parameter ϕ = ${item.gateUsed.originalExpression ?? item.gateUsed.phi}` : ""}`}
                         </TimelineTitle>
                         {/* <TimelineDescription>13th May 2021</TimelineDescription> */}
                       </TimelineContent>

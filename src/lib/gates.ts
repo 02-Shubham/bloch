@@ -40,8 +40,8 @@ export const HGate: Gate = {
   },
 };
 
-export const PGate: (theta: number, originalExpression?: string) => Gate = (
-  theta,
+export const PGate: (phi: number, originalExpression?: string) => Gate = (
+  phi,
   originalExpression,
 ) => ({
   name: "P",
@@ -50,10 +50,10 @@ export const PGate: (theta: number, originalExpression?: string) => Gate = (
     _01: { real: 0, imag: 0 },
     _10: { real: 0, imag: 0 },
     _11: {
-      real: Math.cos(theta),
-      imag: Math.sin(theta),
+      real: Math.cos(phi),
+      imag: Math.sin(phi),
     },
   },
-  theta,
+  phi,
   originalExpression,
 });
