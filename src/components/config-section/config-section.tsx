@@ -1,5 +1,5 @@
-import { Button, Card, Group, VStack } from "@chakra-ui/react";
-import React from "react";
+import { Button, Card, Group, Input, VStack } from "@chakra-ui/react";
+import React, { useState } from "react";
 import { CollapsibleCard } from "@/components/collapsible-card/collapsible-card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAppContext } from "@/state/app-context";
@@ -20,6 +20,10 @@ import {
   TimelineRoot,
   TimelineTitle,
 } from "@/components/ui/timeline";
+import { create, all } from "mathjs";
+import { useColorModeValue } from "@/components/ui/color-mode";
+
+const math = create(all);
 
 export const ConfigSection: React.FC = () => {
   const {
@@ -34,6 +38,44 @@ export const ConfigSection: React.FC = () => {
     currentHistoryIndex,
     resetRotation,
   } = useAppContext();
+
+  const [thetaExpression, setThetaExpression] = useState("pi/2");
+  const [thetaError, setThetaError] = useState(false);
+  const [calculatedThetaExpression, setCalculatedThetaExpression] = useState(
+    Math.PI / 2,
+  );
+  const inputBorderColor = useColorModeValue("gray.100", "gray.900");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setThetaExpression(newValue);
+
+    const TOLERANCE = 1e-12;
+
+    try {
+      const value = math.evaluate(newValue);
+
+      if (value === undefined) {
+        setThetaError(true);
+      } else if (typeof value === "number") {
+        setThetaError(false);
+        setCalculatedThetaExpression(value);
+      } else if (
+        value.im !== undefined &&
+        value.re !== undefined &&
+        typeof value.im === "number" &&
+        typeof value.re === "number" &&
+        Math.abs(value.im) < TOLERANCE
+      ) {
+        setThetaError(false);
+        setCalculatedThetaExpression(value.re);
+      } else {
+        setThetaError(true);
+      }
+    } catch (_err) {
+      setThetaError(true);
+    }
+  };
 
   return (
     <VStack
@@ -50,43 +92,63 @@ export const ConfigSection: React.FC = () => {
             variant={"subtle"}
             onClick={() => applyGate(XGate)}
           >
-            X
+            <strong>X</strong>
           </Button>
           <Button
             size={"sm"}
             variant={"subtle"}
             onClick={() => applyGate(YGate)}
           >
-            Y
+            <strong>Y</strong>
           </Button>
           <Button
             size={"sm"}
             variant={"subtle"}
             onClick={() => applyGate(ZGate)}
           >
-            Z
+            <strong>Z</strong>
           </Button>
           <Button
             size={"sm"}
             variant={"subtle"}
             onClick={() => applyGate(HGate)}
           >
-            H
+            <strong>H</strong>
           </Button>
-          <Button
-            size={"sm"}
-            variant={"subtle"}
-            onClick={() => applyGate(PGate(Math.PI /* TODO */))}
-          >
-            P(with PI parameter)
-          </Button>
-          <Button
-            size={"sm"}
-            variant={"subtle"}
-            onClick={() => applyGate(PGate(Math.PI / 2))}
-          >
-            S
-          </Button>
+          <Group attached>
+            <Button
+              size={"sm"}
+              variant={"subtle"}
+              onClick={() =>
+                applyGate(PGate(calculatedThetaExpression, thetaExpression))
+              }
+              disabled={thetaError}
+            >
+              <strong>P</strong>(θ =
+            </Button>
+            <Input
+              size={"sm"}
+              placeholder="e.g., e^(i*pi/sqrt(2))"
+              value={thetaExpression}
+              onChange={handleChange}
+              borderRadius={0}
+              borderColor={thetaError ? "border.error" : inputBorderColor}
+              width={"150px"}
+              marginRight={0}
+              _focus={{ outline: 0 }}
+              _active={{ outline: 0 }}
+            />
+            <Button
+              size={"sm"}
+              variant={"subtle"}
+              onClick={() =>
+                applyGate(PGate(calculatedThetaExpression, thetaExpression))
+              }
+              disabled={thetaError}
+            >
+              )
+            </Button>
+          </Group>
         </Group>
       </CollapsibleCard>
       <CollapsibleCard title="History">
@@ -114,7 +176,7 @@ export const ConfigSection: React.FC = () => {
               colorPalette={"red"}
               onClick={() => resetHistory()}
             >
-              <LuUndo2 /> Reset state
+              <LuUndo2 /> Reset state to ∣0⟩
             </Button>
           </Group>
           <Card.Root w={"full"} maxH={"300px"} overflowY={"scroll"}>
@@ -144,7 +206,7 @@ export const ConfigSection: React.FC = () => {
                         <TimelineTitle>
                           {item.gateUsed.name === "init"
                             ? "Initialized with ∣0⟩"
-                            : `${item.gateUsed.name} gate used`}
+                            : `${item.gateUsed.name} gate used${item.gateUsed.name === "P" ? ` with parameter θ = ${item.gateUsed.originalExpression ?? item.gateUsed.theta}` : ""}`}
                         </TimelineTitle>
                         {/* <TimelineDescription>13th May 2021</TimelineDescription> */}
                       </TimelineContent>
@@ -157,12 +219,13 @@ export const ConfigSection: React.FC = () => {
         </VStack>
       </CollapsibleCard>
       <CollapsibleCard title="Settings">
-        <VStack gap={4} alignSelf={"stretch"} alignItems={"flex-start"}>
+        <VStack gap={4} alignSelf={"stretch"} alignItems={"stretch"}>
           <Button
             size={"sm"}
             variant={"subtle"}
             colorPalette={"red"}
             onClick={resetRotation}
+            alignSelf={"flex-start"}
           >
             <LuMove3D /> Reset rotation, zoom
           </Button>

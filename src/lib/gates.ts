@@ -40,7 +40,10 @@ export const HGate: Gate = {
   },
 };
 
-export const PGate: (theta: number) => Gate = (theta) => ({
+export const PGate: (theta: number, originalExpression?: string) => Gate = (
+  theta,
+  originalExpression,
+) => ({
   name: "P",
   matrix: {
     _00: { real: 1, imag: 0 },
@@ -52,4 +55,5 @@ export const PGate: (theta: number) => Gate = (theta) => ({
     },
   },
   theta,
+  originalExpression,
 });
