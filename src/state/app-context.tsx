@@ -21,6 +21,8 @@ export interface AppContextType {
   undo: () => void;
   redo: () => void;
   resetHistory: (toState?: QuantumState) => void;
+  canUndo: () => boolean;
+  canRedo: () => boolean;
   settings: {
     showAxesHelper: boolean;
     changeShowAxesHelper: Dispatch<SetStateAction<boolean>>;
@@ -39,6 +41,8 @@ export const AppContext = createContext<AppContextType>({
   undo: () => null,
   redo: () => null,
   resetHistory: () => null,
+  canUndo: () => false,
+  canRedo: () => false,
   settings: {
     showAxesHelper: false,
     changeShowAxesHelper: () => null,
@@ -68,14 +72,15 @@ export const AppContextProvider = ({
     setCurrentHistoryIndex(currentHistoryIndex + 1);
   };
 
+  const canUndo = () => currentHistoryIndex > 0;
+  const canRedo = () => currentHistoryIndex < history.length - 1;
+
   const undo = () => {
-    if (currentHistoryIndex > 0)
-      setCurrentHistoryIndex(currentHistoryIndex - 1);
+    if (canUndo()) setCurrentHistoryIndex(currentHistoryIndex - 1);
   };
 
   const redo = () => {
-    if (currentHistoryIndex < history.length - 1)
-      setCurrentHistoryIndex(currentHistoryIndex + 1);
+    if (canRedo()) setCurrentHistoryIndex(currentHistoryIndex + 1);
   };
 
   const resetHistory = (toState: QuantumState = INITIAL_QUANTUM_STATE) => {
@@ -92,6 +97,8 @@ export const AppContextProvider = ({
         undo,
         redo,
         resetHistory,
+        canUndo,
+        canRedo,
         settings: {
           showAxesHelper,
           changeShowAxesHelper,

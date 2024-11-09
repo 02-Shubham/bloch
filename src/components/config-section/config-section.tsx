@@ -13,6 +13,8 @@ export const ConfigSection: React.FC = () => {
     redo,
     resetHistory,
     applyGate,
+    canUndo,
+    canRedo,
   } = useAppContext();
 
   return (
@@ -71,10 +73,20 @@ export const ConfigSection: React.FC = () => {
       </CollapsibleCard>
       <CollapsibleCard title="History">
         <Group wrap={"wrap"}>
-          <Button size={"sm"} variant={"subtle"} onClick={undo}>
+          <Button
+            size={"sm"}
+            variant={"subtle"}
+            onClick={undo}
+            disabled={!canUndo()}
+          >
             <LuUndo /> Undo
           </Button>
-          <Button size={"sm"} variant={"subtle"} onClick={redo}>
+          <Button
+            size={"sm"}
+            variant={"subtle"}
+            onClick={redo}
+            disabled={!canRedo()}
+          >
             <LuRedo /> Redo
           </Button>
           <Button
