@@ -21,7 +21,6 @@ import {
   TimelineTitle,
 } from "@/components/ui/timeline";
 import { create, all } from "mathjs";
-import { useColorModeValue } from "@/components/ui/color-mode";
 
 const math = create(all);
 
@@ -44,7 +43,6 @@ export const ConfigSection: React.FC = () => {
   const [calculatedPhiExpression, setCalculatedPhiExpression] = useState(
     Math.PI / 2,
   );
-  const inputBorderColor = useColorModeValue("gray.100", "gray.900");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
@@ -132,7 +130,7 @@ export const ConfigSection: React.FC = () => {
               value={phiExpression}
               onChange={handleChange}
               borderRadius={0}
-              borderColor={phiError ? "border.error" : inputBorderColor}
+              borderColor={phiError ? "border.error" : "gray.subtle"}
               width={"150px"}
               marginRight={0}
               _focus={{ outline: 0 }}
