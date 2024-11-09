@@ -1,16 +1,13 @@
-import { Box, Button, Card, Group, Text, VStack } from "@chakra-ui/react";
+import { Button, Card, Group, VStack } from "@chakra-ui/react";
 import React from "react";
 import { CollapsibleCard } from "@/components/collapsible-card/collapsible-card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAppContext } from "@/state/app-context";
 import {
-  LuCheck,
   LuCircle,
   LuCircleDashed,
   LuCircleDot,
-  LuPackage,
   LuRedo,
-  LuShip,
   LuUndo,
   LuUndo2,
 } from "react-icons/lu";
@@ -18,7 +15,6 @@ import { HGate, PGate, XGate, YGate, ZGate } from "@/lib/gates";
 import {
   TimelineConnector,
   TimelineContent,
-  TimelineDescription,
   TimelineItem,
   TimelineRoot,
   TimelineTitle,
