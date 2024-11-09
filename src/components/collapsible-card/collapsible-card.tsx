@@ -28,7 +28,7 @@ export const CollapsibleCard: React.FC<CollapsibleCardProps> = ({
           onOpenChange={() => setIsCollapsed(!isCollapsed)}
           display={"flex"}
           flexDirection={"column"}
-          gap="2"
+          gap="4"
         >
           <Collapsible.Trigger width={"full"} cursor={"pointer"}>
             <Card.Title

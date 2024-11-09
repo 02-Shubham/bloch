@@ -29,7 +29,7 @@ export default function Home() {
       maxHeight={"100vh"}
       overflow={"hidden"}
     >
-      <Box position={"absolute"} top={2} right={2} zIndex={100}>
+      <Box position={"absolute"} top={"6px"} right={"6px"} zIndex={100}>
         <ColorModeButton />
       </Box>
       <Stack
