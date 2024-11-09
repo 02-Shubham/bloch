@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React from "react";
 import { Canvas, Vector3 } from "@react-three/fiber";
 import {
   OrbitControls,
@@ -20,6 +20,8 @@ export interface BlochSphereProps {
   arrowColor?: THREE.ColorRepresentation | undefined;
   showAxesHelper?: boolean | undefined;
   showStats?: boolean | undefined;
+  // eslint-disable-next-line
+  controlsRef?: React.Ref<any>;
 }
 
 // Function to calculate position and rotation for the arrow based on direction
@@ -70,6 +72,7 @@ export const BlochSphere: React.FC<BlochSphereProps> = ({
   arrowColor = new THREE.Color(0x7dfff8),
   showAxesHelper = false,
   showStats = false,
+  controlsRef = null,
 }) => {
   const arrowLength = 1;
   const shaftRadius = 0.02;
@@ -93,7 +96,12 @@ export const BlochSphere: React.FC<BlochSphereProps> = ({
   return (
     <Canvas camera={{ position: [-3, 3, 3], fov: 30 }}>
       {/* Controls for panning and rotating */}
-      <OrbitControls enableZoom={true} zoomToCursor={false} enablePan={false} />
+      <OrbitControls
+        ref={controlsRef}
+        enableZoom={true}
+        zoomToCursor={false}
+        enablePan={false}
+      />
 
       {/* Light sources */}
       <ambientLight intensity={0.5} />

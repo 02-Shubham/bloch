@@ -18,6 +18,7 @@ export default function Home() {
     history,
     currentHistoryIndex,
     settings: { showAxesHelper, showStats },
+    controlsRef,
   } = useAppContext();
 
   return (
@@ -62,6 +63,7 @@ export default function Home() {
               }
               showAxesHelper={showAxesHelper}
               showStats={showStats}
+              controlsRef={controlsRef}
             />
           </Box>
         </Box>

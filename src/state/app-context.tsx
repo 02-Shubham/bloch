@@ -6,6 +6,7 @@ import {
   Dispatch,
   SetStateAction,
   useContext,
+  useRef,
   useState,
 } from "react";
 
@@ -29,6 +30,9 @@ export interface AppContextType {
     showStats: boolean;
     setShowStats: Dispatch<SetStateAction<boolean>>;
   };
+  // eslint-disable-next-line
+  controlsRef: React.Ref<any>;
+  resetRotation: () => void;
 }
 
 const INITIAL_QUANTUM_STATE: QuantumState = {
@@ -51,6 +55,8 @@ export const AppContext = createContext<AppContextType>({
     showStats: false,
     setShowStats: () => null,
   },
+  controlsRef: null,
+  resetRotation: () => null,
 });
 
 export const AppContextProvider = ({
@@ -93,6 +99,13 @@ export const AppContextProvider = ({
     setHistory([{ currentState: toState, gateUsed: { name: "init" } }]);
   };
 
+  // eslint-disable-next-line
+  const controlsRef = useRef<any>(null);
+
+  const handleReset = () => {
+    controlsRef.current?.reset();
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -110,6 +123,8 @@ export const AppContextProvider = ({
           showStats,
           setShowStats,
         },
+        controlsRef,
+        resetRotation: handleReset,
       }}
     >
       {children}

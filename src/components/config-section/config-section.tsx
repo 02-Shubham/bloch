@@ -7,6 +7,7 @@ import {
   LuCircle,
   LuCircleDashed,
   LuCircleDot,
+  LuMove3D,
   LuRedo,
   LuUndo,
   LuUndo2,
@@ -31,6 +32,7 @@ export const ConfigSection: React.FC = () => {
     canRedo,
     history,
     currentHistoryIndex,
+    resetRotation,
   } = useAppContext();
 
   return (
@@ -155,7 +157,15 @@ export const ConfigSection: React.FC = () => {
         </VStack>
       </CollapsibleCard>
       <CollapsibleCard title="Settings">
-        <VStack gap={4} alignSelf={"stretch"} alignItems={"stretch"}>
+        <VStack gap={4} alignSelf={"stretch"} alignItems={"flex-start"}>
+          <Button
+            size={"sm"}
+            variant={"subtle"}
+            colorPalette={"red"}
+            onClick={resetRotation}
+          >
+            <LuMove3D /> Reset rotation, zoom
+          </Button>
           <Checkbox
             variant={"subtle"}
             checked={showAxesHelper}
