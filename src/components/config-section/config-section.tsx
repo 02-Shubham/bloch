@@ -258,13 +258,17 @@ export const ConfigSection: React.FC = () => {
             <PopoverContent>
               <PopoverArrow />
               <PopoverBody>
-                <SimpleGrid columns={6} gap={4}>
-                  <GridItem colSpan={1} rowSpan={2}>
-                    <Text fontSize={"75px"} lineHeight={"75px"}>
-                      [
+                <SimpleGrid columns={6} columnGap={2}>
+                  <GridItem>
+                    <Text
+                      fontSize={"40px"}
+                      lineHeight={"40px"}
+                      textAlign={"center"}
+                    >
+                      ⎡
                     </Text>
                   </GridItem>
-                  <GridItem colSpan={2}>
+                  <GridItem colSpan={2} paddingBottom={1}>
                     <Input
                       size={"sm"}
                       placeholder="1/sqrt(2)"
@@ -286,7 +290,7 @@ export const ConfigSection: React.FC = () => {
                       _active={{ outline: 0 }}
                     />
                   </GridItem>
-                  <GridItem colSpan={2}>
+                  <GridItem colSpan={2} paddingBottom={1}>
                     <Input
                       size={"sm"}
                       placeholder="1/sqrt(2)"
@@ -308,12 +312,25 @@ export const ConfigSection: React.FC = () => {
                       _active={{ outline: 0 }}
                     />
                   </GridItem>
-                  <GridItem colSpan={1} rowSpan={2}>
-                    <Text fontSize={"75px"} lineHeight={"75px"}>
-                      ]
+                  <GridItem>
+                    <Text
+                      fontSize={"40px"}
+                      lineHeight={"40px"}
+                      textAlign={"center"}
+                    >
+                      ⎤
                     </Text>
                   </GridItem>
-                  <GridItem colSpan={2}>
+                  <GridItem>
+                    <Text
+                      fontSize={"40px"}
+                      lineHeight={"40px"}
+                      textAlign={"center"}
+                    >
+                      ⎣
+                    </Text>
+                  </GridItem>
+                  <GridItem colSpan={2} paddingTop={1}>
                     <Input
                       size={"sm"}
                       placeholder="1/sqrt(2)"
@@ -335,7 +352,7 @@ export const ConfigSection: React.FC = () => {
                       _active={{ outline: 0 }}
                     />
                   </GridItem>
-                  <GridItem colSpan={2}>
+                  <GridItem colSpan={2} paddingTop={1}>
                     <Input
                       size={"sm"}
                       placeholder="-1/sqrt(2)"
@@ -357,7 +374,16 @@ export const ConfigSection: React.FC = () => {
                       _active={{ outline: 0 }}
                     />
                   </GridItem>
-                  <GridItem colSpan={6}>
+                  <GridItem>
+                    <Text
+                      fontSize={"40px"}
+                      lineHeight={"40px"}
+                      textAlign={"center"}
+                    >
+                      ⎦
+                    </Text>
+                  </GridItem>
+                  <GridItem colSpan={6} paddingTop={4}>
                     <VStack w={"full"} alignItems={"stretch"} gap={2}>
                       {customGateError !== null && (
                         <Text colorPalette={"red"} textAlign={"center"}>
@@ -470,6 +496,7 @@ export const ConfigSection: React.FC = () => {
                             columns={13}
                             gap={0}
                             alignSelf={"stretch"}
+                            textAlign={"center"}
                           >
                             <GridItem>
                               <TimelineDescription>{`⎡`}</TimelineDescription>
