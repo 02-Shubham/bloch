@@ -25,6 +25,7 @@ import { CustomGate, HGate, PGate, XGate, YGate, ZGate } from "@/lib/gates";
 import {
   TimelineConnector,
   TimelineContent,
+  TimelineDescription,
   TimelineItem,
   TimelineRoot,
   TimelineTitle,
@@ -424,7 +425,13 @@ export const ConfigSection: React.FC = () => {
               <LuUndo2 /> Reset state to ∣0⟩
             </Button>
           </Group>
-          <Card.Root w={"full"} maxH={"300px"} overflowY={"scroll"}>
+          <Card.Root
+            w={"full"}
+            maxH={"300px"}
+            overflowY={
+              "scroll"
+            } /* TODO scroll to active when moved in history */
+          >
             <Card.Body paddingBottom={0}>
               <TimelineRoot variant={"subtle"} w="full">
                 {history.toReversed().map((item, index) => {
@@ -451,9 +458,59 @@ export const ConfigSection: React.FC = () => {
                         <TimelineTitle>
                           {item.gateUsed.name === "init"
                             ? "Initialized with ∣0⟩"
-                            : `${item.gateUsed.name} gate used${item.gateUsed.name === "P" ? ` with parameter ϕ = ${item.gateUsed.originalExpression ?? item.gateUsed.phi}` : ""}`}
+                            : `${item.gateUsed.name} gate used`}
                         </TimelineTitle>
-                        {/* <TimelineDescription>13th May 2021</TimelineDescription> */}
+                        {item.gateUsed.name === "P" && (
+                          <TimelineDescription>
+                            {`ϕ = ${item.gateUsed.originalExpression ?? item.gateUsed.phi}`}
+                          </TimelineDescription>
+                        )}
+                        {item.gateUsed.name === "custom" && (
+                          <SimpleGrid
+                            columns={13}
+                            gap={0}
+                            alignSelf={"stretch"}
+                          >
+                            <GridItem>
+                              <TimelineDescription>{`⎡`}</TimelineDescription>
+                            </GridItem>
+                            <GridItem colSpan={5}>
+                              <TimelineDescription>
+                                {item.gateUsed.originalExpressionMatrix._00}
+                              </TimelineDescription>
+                            </GridItem>
+                            <GridItem>
+                              <TimelineDescription>{`;`}</TimelineDescription>
+                            </GridItem>
+                            <GridItem colSpan={5}>
+                              <TimelineDescription>
+                                {item.gateUsed.originalExpressionMatrix._01}
+                              </TimelineDescription>
+                            </GridItem>
+                            <GridItem>
+                              <TimelineDescription>{`⎤`}</TimelineDescription>
+                            </GridItem>
+                            <GridItem>
+                              <TimelineDescription>{`⎣`}</TimelineDescription>
+                            </GridItem>
+                            <GridItem colSpan={5}>
+                              <TimelineDescription>
+                                {item.gateUsed.originalExpressionMatrix._10}
+                              </TimelineDescription>
+                            </GridItem>
+                            <GridItem>
+                              <TimelineDescription>{`;`}</TimelineDescription>
+                            </GridItem>
+                            <GridItem colSpan={5}>
+                              <TimelineDescription>
+                                {item.gateUsed.originalExpressionMatrix._11}
+                              </TimelineDescription>
+                            </GridItem>
+                            <GridItem>
+                              <TimelineDescription>{`⎦`}</TimelineDescription>
+                            </GridItem>
+                          </SimpleGrid>
+                        )}
                       </TimelineContent>
                     </TimelineItem>
                   );
