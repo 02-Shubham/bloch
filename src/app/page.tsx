@@ -2,8 +2,9 @@
 import { BlochSphere } from "@/components/bloch-sphere/bloch-sphere";
 import { ConfigSection } from "@/components/config-section/config-section";
 import { ColorModeButton } from "@/components/ui/color-mode";
+import { stateToString } from "@/lib/state-parser";
 import { useAppContext } from "@/state/app-context";
-import { Box, Stack, VStack } from "@chakra-ui/react";
+import { Box, Stack, Text, VStack } from "@chakra-ui/react";
 
 import { Noto_Sans_Math } from "next/font/google";
 
@@ -65,6 +66,23 @@ export default function Home() {
               showStats={showStats}
               controlsRef={controlsRef}
             />
+            <Box
+              position={"absolute"}
+              bottom={0}
+              left={0}
+              zIndex={100}
+              backgroundColor={"gray.contrast"}
+              padding={2}
+              userSelect={"text"}
+            >
+              <Text>{`Current state: ${stateToString(
+                history[
+                  currentHistoryIndex > history.length - 1
+                    ? 0
+                    : currentHistoryIndex
+                ].currentState,
+              )}`}</Text>
+            </Box>
           </Box>
         </Box>
         <VStack flex={1} gap={16} paddingY={16} overflowY={"scroll"}>
