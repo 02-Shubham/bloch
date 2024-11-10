@@ -74,6 +74,7 @@ export default function Home() {
               backgroundColor={"gray.contrast"}
               padding={2}
               userSelect={"text"}
+              cursor={"text"}
             >
               <Text>{`Current state: ${stateToString(
                 history[
