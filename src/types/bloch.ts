@@ -3,6 +3,13 @@ export interface Complex {
   imag: number;
 }
 
+export interface Matrix2x2<T> {
+  _00: T;
+  _01: T;
+  _10: T;
+  _11: T;
+}
+
 export interface QuantumState {
   a: Complex;
   b: Complex;
@@ -10,14 +17,19 @@ export interface QuantumState {
 
 export type Gate =
   | {
-      name: "X" | "Y" | "Z" | "H" | "custom";
-      matrix: { _00: Complex; _01: Complex; _10: Complex; _11: Complex };
+      name: "X" | "Y" | "Z" | "H";
+      matrix: Matrix2x2<Complex>;
     }
   | {
       name: "P";
-      matrix: { _00: Complex; _01: Complex; _10: Complex; _11: Complex };
+      matrix: Matrix2x2<Complex>;
       phi: number;
       originalExpression?: string | undefined;
+    }
+  | {
+      name: "custom";
+      matrix: Matrix2x2<Complex>;
+      originalExpressionMatrix: Matrix2x2<string>;
     }
   | {
       name: "init";

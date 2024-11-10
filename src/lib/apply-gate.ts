@@ -1,14 +1,5 @@
-import { Complex, QuantumState, Gate } from "@/types/bloch";
-
-const multiplyComplex = (c1: Complex, c2: Complex): Complex => ({
-  real: c1.real * c2.real - c1.imag * c2.imag,
-  imag: c1.real * c2.imag + c1.imag * c2.real,
-});
-
-const addComplex = (c1: Complex, c2: Complex): Complex => ({
-  real: c1.real + c2.real,
-  imag: c1.imag + c2.imag,
-});
+import { QuantumState, Gate } from "@/types/bloch";
+import { addComplex, multiplyComplex } from "./helper-operations";
 
 export const applyGateToState: (
   state: QuantumState,

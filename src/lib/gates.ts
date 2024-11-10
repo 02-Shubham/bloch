@@ -1,4 +1,4 @@
-import { Gate } from "@/types/bloch";
+import { Complex, Gate, Matrix2x2 } from "@/types/bloch";
 
 export const XGate: Gate = {
   name: "X",
@@ -56,4 +56,13 @@ export const PGate: (phi: number, originalExpression?: string) => Gate = (
   },
   phi,
   originalExpression,
+});
+
+export const CustomGate: (
+  matrix: Matrix2x2<Complex>,
+  originalExpressionMatrix: Matrix2x2<string>,
+) => Gate = (matrix, originalExpressionMatrix) => ({
+  name: "custom",
+  matrix,
+  originalExpressionMatrix,
 });
