@@ -8,7 +8,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CollapsibleCard } from "@/components/collapsible-card/collapsible-card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAppContext } from "@/state/app-context";
@@ -176,6 +176,37 @@ export const ConfigSection: React.FC = () => {
       setError(true);
     }
   };
+
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const itemRefs = useRef<Map<number, HTMLDivElement>>(new Map());
+
+  const scrollToActiveItem = () => {
+    const container = containerRef.current;
+    const activeItem = itemRefs.current.get(
+      history.length - 1 - currentHistoryIndex,
+    );
+
+    if (container && activeItem) {
+      const containerRect = container.getBoundingClientRect();
+      const activeItemRect = activeItem.getBoundingClientRect();
+
+      const scrollOffset =
+        activeItemRect.top -
+        containerRect.top +
+        container.scrollTop -
+        containerRect.height / 2 +
+        activeItemRect.height / 2;
+
+      container.scrollTo({
+        top: scrollOffset,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  useEffect(() => {
+    scrollToActiveItem();
+  }, [currentHistoryIndex]);
 
   return (
     <VStack
@@ -454,9 +485,8 @@ export const ConfigSection: React.FC = () => {
           <Card.Root
             w={"full"}
             maxH={"300px"}
-            overflowY={
-              "scroll"
-            } /* TODO scroll to active when moved in history */
+            overflowY={"scroll"}
+            ref={containerRef}
           >
             <Card.Body paddingBottom={0}>
               <TimelineRoot variant={"subtle"} w="full">
@@ -464,7 +494,12 @@ export const ConfigSection: React.FC = () => {
                   const reversedCurrentHistoryIndex =
                     history.length - 1 - currentHistoryIndex;
                   return (
-                    <TimelineItem key={index}>
+                    <TimelineItem
+                      key={index}
+                      ref={(el) => {
+                        if (el) itemRefs.current.set(index, el);
+                      }}
+                    >
                       <TimelineConnector
                         {...(index === reversedCurrentHistoryIndex
                           ? { bg: "#317572", color: "teal.contrast" }
