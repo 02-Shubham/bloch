@@ -177,7 +177,10 @@ export const BlochSphere: React.FC<BlochSphereProps> = ({
                 key={index}
                 previousState={item.previousDirection}
                 gateUsed={item.gateUsed}
-                progress={(index + 1) / drawPathForTheLastNGate}
+                progress={
+                  (index + 1) /
+                  Math.min(drawPathForTheLastNGate, tracking.length)
+                }
               />
             );
           })}
