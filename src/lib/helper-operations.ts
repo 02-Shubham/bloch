@@ -28,14 +28,21 @@ export const TOLERANCE = 1e-12;
 
 export const belowTolerance = (n: number): boolean => Math.abs(n) < TOLERANCE;
 
-export const zeroIfBelowTolerance = (n: number): number =>
-  belowTolerance(n) ? 0 : n;
+export const numberToExpression = (
+  n: number,
+  mapping: { key: string; value: number }[],
+): string => {
+  const match = mapping.find((x) =>
+    belowTolerance(Math.abs(x.value) - Math.abs(n)),
+  );
+  if (match === undefined) {
+    return `${n.toFixed(4)}`;
+  }
 
-export const almostAbs1SlashSqrt2 = (n: number): boolean =>
-  belowTolerance(Math.abs(n) - 1 / Math.sqrt(2));
+  const isNegative = n < 0 && match.value !== 0;
 
-export const oneSlashSqrt2IfAlmostAbs1SlashSqrt2 = (n: number): string =>
-  almostAbs1SlashSqrt2(n) ? (n < 0 ? `(-1/√2)` : `(1/√2)`) : `${n}`;
+  return `${isNegative ? "(-" : ""}${match.key}${isNegative ? ")" : ""}`;
+};
 
 export const isCloseComplex = (a: Complex, b: Complex): boolean =>
   Math.abs(a.real - b.real) < TOLERANCE &&

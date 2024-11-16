@@ -1,9 +1,5 @@
 import { QuantumState } from "@/types/bloch";
-import {
-  isEqualQuantumState,
-  oneSlashSqrt2IfAlmostAbs1SlashSqrt2,
-  zeroIfBelowTolerance,
-} from "./helper-operations";
+import { isEqualQuantumState, numberToExpression } from "./helper-operations";
 
 export const BASE_STATES: { key: string; value: QuantumState }[] = [
   {
@@ -50,6 +46,18 @@ export const BASE_STATES: { key: string; value: QuantumState }[] = [
   },
 ];
 
+export const EXPRESSION_MAP: { key: string; value: number }[] = [
+  { key: "0", value: 0 },
+  { key: "1/√8", value: 1 / Math.sqrt(8) },
+  { key: "1/2", value: 1 / 2 },
+  { key: "1/√3", value: 1 / Math.sqrt(3) },
+  { key: "1/√2", value: 1 / Math.sqrt(2) },
+  { key: "√(2/3)", value: Math.sqrt(2 / 3) },
+  { key: "(√3)/2", value: Math.sqrt(3) / 2 },
+  { key: "√(3/4)", value: Math.sqrt(3 / 4) },
+  { key: "1", value: 1 },
+];
+
 export const stateToString: (state: QuantumState) => string = (state) => {
   const baseState = BASE_STATES.find((x) =>
     isEqualQuantumState(x.value, state),
@@ -57,6 +65,6 @@ export const stateToString: (state: QuantumState) => string = (state) => {
 
   return (
     baseState?.key ||
-    `(${oneSlashSqrt2IfAlmostAbs1SlashSqrt2(zeroIfBelowTolerance(state.a.real))} + ${oneSlashSqrt2IfAlmostAbs1SlashSqrt2(zeroIfBelowTolerance(state.a.imag))} * i) * ∣0⟩ + (${oneSlashSqrt2IfAlmostAbs1SlashSqrt2(zeroIfBelowTolerance(state.b.real))} + ${oneSlashSqrt2IfAlmostAbs1SlashSqrt2(zeroIfBelowTolerance(state.b.imag))} * i) * ∣1⟩`
+    `(${numberToExpression(state.a.real, EXPRESSION_MAP)} + ${numberToExpression(state.a.imag, EXPRESSION_MAP)} * i) * ∣0⟩ + (${numberToExpression(state.b.real, EXPRESSION_MAP)} + ${numberToExpression(state.b.imag, EXPRESSION_MAP)} * i) * ∣1⟩`
   );
 };
