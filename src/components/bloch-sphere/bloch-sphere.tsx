@@ -13,10 +13,17 @@ import {
 import * as THREE from "three";
 import { useColorModeValue } from "@/components/ui/color-mode";
 import { ketToBlochVector } from "@/lib/ket-to-bloch-vector";
-import { QuantumState } from "@/types/bloch";
+import { Gate, QuantumState } from "@/types/bloch";
+import { calculateIntermediateStates } from "@/lib/track-movement";
 
 export interface BlochSphereProps {
   arrowDirection?: QuantumState | undefined;
+  tracking?:
+    | {
+        previousDirection: QuantumState;
+        gateUsed: Gate;
+      }
+    | undefined;
   arrowColor?: THREE.ColorRepresentation | undefined;
   showAxesHelper?: boolean | undefined;
   showStats?: boolean | undefined;
@@ -67,8 +74,27 @@ const VerticalCircle = ({ angle }: { angle: number }) => {
   return <Line points={points} color="gray" lineWidth={0.5} opacity={0.7} />;
 };
 
+// Function to track the state movement
+const TrackingLine = ({
+  previousState,
+  gateUsed,
+}: {
+  previousState: QuantumState;
+  gateUsed: Gate;
+}) => {
+  if (gateUsed.name !== "init") {
+    const points: THREE.Vector3[] = calculateIntermediateStates(
+      previousState,
+      gateUsed.matrix,
+    ).map((x) => ketToBlochVector(x));
+    return <Line points={points} color="red" lineWidth={2} opacity={1} />;
+  }
+  return null;
+};
+
 export const BlochSphere: React.FC<BlochSphereProps> = ({
   arrowDirection,
+  tracking,
   arrowColor = new THREE.Color(0x7dfff8),
   showAxesHelper = false,
   showStats = false,
@@ -118,6 +144,13 @@ export const BlochSphere: React.FC<BlochSphereProps> = ({
             side={THREE.DoubleSide}
           />
         </Sphere>
+
+        {tracking && (
+          <TrackingLine
+            previousState={tracking.previousDirection}
+            gateUsed={tracking.gateUsed}
+          />
+        )}
 
         {/* Horizontal Circles */}
         {[0.8, 0.4, 0, -0.4, -0.8].map((z) => (

@@ -62,6 +62,15 @@ export default function Home() {
                     : currentHistoryIndex
                 ].currentState
               }
+              tracking={
+                currentHistoryIndex === 0
+                  ? undefined
+                  : {
+                      previousDirection:
+                        history[currentHistoryIndex - 1].currentState,
+                      gateUsed: history[currentHistoryIndex].gateUsed,
+                    }
+              }
               showAxesHelper={showAxesHelper}
               showStats={showStats}
               controlsRef={controlsRef}

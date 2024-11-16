@@ -33,4 +33,8 @@ export type Gate =
     }
   | {
       name: "init";
+    }
+  | {
+      name: "rotation";
+      matrix: Matrix2x2<Complex>;
     };

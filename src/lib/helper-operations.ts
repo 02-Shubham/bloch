@@ -5,10 +5,22 @@ export const addComplex = (c1: Complex, c2: Complex): Complex => ({
   imag: c1.imag + c2.imag,
 });
 
+export const subtractComplex = (a: Complex, b: Complex): Complex => ({
+  real: a.real - b.real,
+  imag: a.imag - b.imag,
+});
+
 export const multiplyComplex = (c1: Complex, c2: Complex): Complex => ({
   real: c1.real * c2.real - c1.imag * c2.imag,
   imag: c1.real * c2.imag + c1.imag * c2.real,
 });
+
+export const multiplyComplexByScalar = (
+  a: Complex,
+  scalar: number,
+): Complex => {
+  return { real: a.real * scalar, imag: a.imag * scalar };
+};
 
 export const conjugateComplex = (c: Complex): Complex => ({
   real: c.real,
@@ -23,6 +35,32 @@ export const conjugateTranspose = (
   _10: conjugateComplex(m._01),
   _11: conjugateComplex(m._11),
 });
+
+export const determinantComplex2x2 = (matrix: Matrix2x2<Complex>): Complex => {
+  return subtractComplex(
+    multiplyComplex(matrix._00, matrix._11),
+    multiplyComplex(matrix._01, matrix._10),
+  );
+};
+
+export const multiplyMatrixByComplex = (
+  scalar: Complex,
+  matrix: Matrix2x2<Complex>,
+): Matrix2x2<Complex> => {
+  return {
+    _00: multiplyComplex(scalar, matrix._00),
+    _01: multiplyComplex(scalar, matrix._01),
+    _10: multiplyComplex(scalar, matrix._10),
+    _11: multiplyComplex(scalar, matrix._11),
+  };
+};
+
+export const computeExpMinusIAlpha = (alpha: number): Complex => {
+  return {
+    real: Math.cos(alpha),
+    imag: -Math.sin(alpha),
+  };
+};
 
 export const TOLERANCE = 1e-12;
 
