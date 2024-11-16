@@ -528,18 +528,18 @@ export const ConfigSection: React.FC = () => {
       <CollapsibleCard title="Current state">
         <VStack w={"full"} gap={2} alignItems={"stretch"}>
           <HStack gapX={4} gapY={1} wrap={"wrap"}>
-            <Text fontWeight={"700"}>Superposition state:</Text>
+            <Text opacity={0.7}>Superposition state:</Text>
             <Text>{stateToKetString(stateToPresent)}</Text>
           </HStack>
           <HStack gap={4} wrap={"wrap"}>
-            <Text fontWeight={"700"}>Rotation angles:</Text>
+            <Text opacity={0.7}>Rotation angles:</Text>
             <HStack gap={12} wrap={"wrap"}>
               <Text>{stateToAnglesString(stateToPresent).split(";")[0]}</Text>
               <Text>{stateToAnglesString(stateToPresent).split(";")[1]}</Text>
             </HStack>
           </HStack>
           <HStack gap={4} wrap={"wrap"}>
-            <Text fontWeight={"700"}>Coords:</Text>
+            <Text opacity={0.7}>Coords:</Text>
             <HStack gap={12} wrap={"wrap"}>
               <Text>
                 {stateToCoordinatesString(stateToPresent).split(";")[0]}
