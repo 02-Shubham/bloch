@@ -22,7 +22,17 @@ import {
   LuUndo,
   LuUndo2,
 } from "react-icons/lu";
-import { CustomGate, HGate, PGate, XGate, YGate, ZGate } from "@/lib/gates";
+import {
+  CustomGate,
+  HGate,
+  PGate,
+  SaGate,
+  SGate,
+  TGate,
+  XGate,
+  YGate,
+  ZGate,
+} from "@/lib/gates";
 import {
   TimelineConnector,
   TimelineContent,
@@ -481,6 +491,29 @@ export const ConfigSection: React.FC = () => {
               </PopoverBody>
             </PopoverContent>
           </PopoverRoot>
+          <Button
+            size={"sm"}
+            variant={"subtle"}
+            onClick={() => applyGate(SGate)}
+          >
+            <strong>S</strong>
+          </Button>
+          <Button
+            size={"sm"}
+            variant={"subtle"}
+            onClick={() => applyGate(SaGate)}
+          >
+            <strong>
+              S<sup>†</sup>
+            </strong>
+          </Button>
+          <Button
+            size={"sm"}
+            variant={"subtle"}
+            onClick={() => applyGate(TGate)}
+          >
+            <strong>T</strong>
+          </Button>
         </Group>
       </CollapsibleCard>
       <CollapsibleCard title="History">
@@ -546,9 +579,23 @@ export const ConfigSection: React.FC = () => {
                       </TimelineConnector>
                       <TimelineContent>
                         <TimelineTitle>
-                          {item.gateUsed.name === "init"
-                            ? "Initialized with ∣0⟩"
-                            : `${item.gateUsed.name} gate used`}
+                          <Text>
+                            {item.gateUsed.name === "init" ? (
+                              "Initialized with ∣0⟩"
+                            ) : (
+                              <>
+                                {item.gateUsed.name === "S†" ? (
+                                  <>
+                                    {"S"}
+                                    <sup>†</sup>
+                                  </>
+                                ) : (
+                                  item.gateUsed.name
+                                )}
+                                {` gate used`}
+                              </>
+                            )}
+                          </Text>
                         </TimelineTitle>
                         {item.gateUsed.name === "P" && (
                           <TimelineDescription>

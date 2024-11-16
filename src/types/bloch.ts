@@ -17,7 +17,7 @@ export interface QuantumState {
 
 export type Gate =
   | {
-      name: "X" | "Y" | "Z" | "H";
+      name: "X" | "Y" | "Z" | "H" | "S" | "S†" | "T";
       matrix: Matrix2x2<Complex>;
     }
   | {

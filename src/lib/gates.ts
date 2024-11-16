@@ -30,6 +30,36 @@ export const ZGate: Gate = {
   },
 };
 
+export const SGate: Gate = {
+  name: "S",
+  matrix: {
+    _00: { real: 1, imag: 0 },
+    _01: { real: 0, imag: 0 },
+    _10: { real: 0, imag: 0 },
+    _11: { real: 0, imag: 1 },
+  },
+};
+
+export const SaGate: Gate = {
+  name: "S†",
+  matrix: {
+    _00: { real: 1, imag: 0 },
+    _01: { real: 0, imag: 0 },
+    _10: { real: 0, imag: 0 },
+    _11: { real: 0, imag: -1 },
+  },
+};
+
+export const TGate: Gate = {
+  name: "T",
+  matrix: {
+    _00: { real: 1, imag: 0 },
+    _01: { real: 0, imag: 0 },
+    _10: { real: 0, imag: 0 },
+    _11: { real: 1 / Math.sqrt(2), imag: 1 / Math.sqrt(2) },
+  },
+};
+
 export const HGate: Gate = {
   name: "H",
   matrix: {
