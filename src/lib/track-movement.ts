@@ -94,8 +94,6 @@ export const calculateIntermediateStates = (
   gateUsed: Matrix2x2<Complex>,
   steps = 60,
 ): QuantumState[] => {
-  console.log(decomposeMatrix(gateUsed));
-
   const res: QuantumState[] = [previousState];
 
   for (let i = 1; i <= steps; i++) {

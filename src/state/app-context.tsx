@@ -29,6 +29,8 @@ export interface AppContextType {
     setShowAxesHelper: Dispatch<SetStateAction<boolean>>;
     showStats: boolean;
     setShowStats: Dispatch<SetStateAction<boolean>>;
+    drawPathForTheLastNGate: number;
+    setDrawPathForTheLastNGate: Dispatch<SetStateAction<number>>;
   };
   // eslint-disable-next-line
   controlsRef: React.Ref<any>;
@@ -54,6 +56,8 @@ export const AppContext = createContext<AppContextType>({
     setShowAxesHelper: () => null,
     showStats: false,
     setShowStats: () => null,
+    drawPathForTheLastNGate: 0,
+    setDrawPathForTheLastNGate: () => null,
   },
   controlsRef: null,
   resetRotation: () => null,
@@ -70,6 +74,7 @@ export const AppContextProvider = ({
   const [currentHistoryIndex, setCurrentHistoryIndex] = useState(0);
   const [showAxesHelper, setShowAxesHelper] = useState(false);
   const [showStats, setShowStats] = useState(false);
+  const [drawPathForTheLastNGate, setDrawPathForTheLastNGate] = useState(3);
 
   const applyGate = (gate: Gate) => {
     const newItem: HistoryItem = {
@@ -122,6 +127,8 @@ export const AppContextProvider = ({
           setShowAxesHelper,
           showStats,
           setShowStats,
+          drawPathForTheLastNGate,
+          setDrawPathForTheLastNGate,
         },
         controlsRef,
         resetRotation: handleReset,

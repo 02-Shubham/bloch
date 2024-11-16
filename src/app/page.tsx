@@ -18,9 +18,21 @@ export default function Home() {
   const {
     history,
     currentHistoryIndex,
-    settings: { showAxesHelper, showStats },
+    settings: { showAxesHelper, showStats, drawPathForTheLastNGate },
     controlsRef,
   } = useAppContext();
+
+  const drawnHistory =
+    currentHistoryIndex === 0
+      ? undefined
+      : history.slice(
+          currentHistoryIndex - drawPathForTheLastNGate < 0
+            ? 0
+            : currentHistoryIndex - drawPathForTheLastNGate,
+          currentHistoryIndex + 1 === history.length
+            ? undefined
+            : currentHistoryIndex + 1,
+        );
 
   return (
     <Box
@@ -65,11 +77,10 @@ export default function Home() {
               tracking={
                 currentHistoryIndex === 0
                   ? undefined
-                  : {
-                      previousDirection:
-                        history[currentHistoryIndex - 1].currentState,
-                      gateUsed: history[currentHistoryIndex].gateUsed,
-                    }
+                  : drawnHistory?.slice(1, undefined).map((item, index) => ({
+                      previousDirection: drawnHistory[index].currentState,
+                      gateUsed: item.gateUsed,
+                    }))
               }
               showAxesHelper={showAxesHelper}
               showStats={showStats}

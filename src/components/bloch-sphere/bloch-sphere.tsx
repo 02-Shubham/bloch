@@ -22,11 +22,12 @@ export interface BlochSphereProps {
     | {
         previousDirection: QuantumState;
         gateUsed: Gate;
-      }
+      }[]
     | undefined;
   arrowColor?: THREE.ColorRepresentation | undefined;
   showAxesHelper?: boolean | undefined;
   showStats?: boolean | undefined;
+  drawPathForTheLastNGate?: number | undefined;
   // eslint-disable-next-line
   controlsRef?: React.Ref<any>;
 }
@@ -78,16 +79,39 @@ const VerticalCircle = ({ angle }: { angle: number }) => {
 const TrackingLine = ({
   previousState,
   gateUsed,
+  progress,
 }: {
   previousState: QuantumState;
   gateUsed: Gate;
+  progress: number;
 }) => {
+  const color = useColorModeValue(
+    new THREE.Color(0x8000ff),
+    new THREE.Color(0xffd700),
+  );
+
   if (gateUsed.name !== "init") {
     const points: THREE.Vector3[] = calculateIntermediateStates(
       previousState,
       gateUsed.matrix,
     ).map((x) => ketToBlochVector(x));
-    return <Line points={points} color="red" lineWidth={2} opacity={1} />;
+
+    const opacity = Math.min(Math.max(progress, 0), 1);
+
+    const vertexColors: [number, number, number, number][] = [];
+    for (let i = 0; i < points.length; i++) {
+      vertexColors.push([color.r, color.g, color.b, opacity]);
+    }
+
+    return (
+      <Line
+        points={points}
+        color={color}
+        vertexColors={vertexColors}
+        lineWidth={2}
+        depthTest={false}
+      />
+    );
   }
   return null;
 };
@@ -98,6 +122,7 @@ export const BlochSphere: React.FC<BlochSphereProps> = ({
   arrowColor = new THREE.Color(0x7dfff8),
   showAxesHelper = false,
   showStats = false,
+  drawPathForTheLastNGate = 3,
   controlsRef = null,
 }) => {
   const arrowLength = 1;
@@ -145,12 +170,17 @@ export const BlochSphere: React.FC<BlochSphereProps> = ({
           />
         </Sphere>
 
-        {tracking && (
-          <TrackingLine
-            previousState={tracking.previousDirection}
-            gateUsed={tracking.gateUsed}
-          />
-        )}
+        {tracking &&
+          tracking.map((item, index) => {
+            return (
+              <TrackingLine
+                key={index}
+                previousState={item.previousDirection}
+                gateUsed={item.gateUsed}
+                progress={(index + 1) / drawPathForTheLastNGate}
+              />
+            );
+          })}
 
         {/* Horizontal Circles */}
         {[0.8, 0.4, 0, -0.4, -0.8].map((z) => (
@@ -215,6 +245,16 @@ export const BlochSphere: React.FC<BlochSphereProps> = ({
           {
             position: [-1.1, 0, 0] as Vector3,
             text: "∣−⟩",
+            color: useColorModeValue("black", "white"),
+          },
+          {
+            position: [0, 1.1, 0] as Vector3,
+            text: "∣ 𝑖⟩",
+            color: useColorModeValue("black", "white"),
+          },
+          {
+            position: [0, -1.1, 0] as Vector3,
+            text: "∣−𝑖⟩",
             color: useColorModeValue("black", "white"),
           },
         ].map((item, index) => {

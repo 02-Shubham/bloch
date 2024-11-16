@@ -3,6 +3,7 @@ import {
   Card,
   GridItem,
   Group,
+  HStack,
   Input,
   SimpleGrid,
   Text,
@@ -46,7 +47,14 @@ const math = create(all);
 
 export const ConfigSection: React.FC = () => {
   const {
-    settings: { showAxesHelper, setShowAxesHelper, showStats, setShowStats },
+    settings: {
+      showAxesHelper,
+      setShowAxesHelper,
+      showStats,
+      setShowStats,
+      drawPathForTheLastNGate,
+      setDrawPathForTheLastNGate,
+    },
     undo,
     redo,
     resetHistory,
@@ -207,6 +215,27 @@ export const ConfigSection: React.FC = () => {
   useEffect(() => {
     scrollToActiveItem();
   }, [currentHistoryIndex]);
+
+  const [drawForValue, setDrawForValue] = useState(
+    drawPathForTheLastNGate.toString(),
+  );
+  const [drawForValueError, setDrawForValueError] = useState(false);
+
+  useEffect(() => {
+    const parsed = parseInt(drawForValue, 10);
+    if (isNaN(parsed)) {
+      setDrawForValueError(true);
+      return;
+    }
+
+    if (parsed < 0) {
+      setDrawForValueError(true);
+      return;
+    }
+
+    setDrawForValueError(false);
+    setDrawPathForTheLastNGate(parsed);
+  }, [drawForValue]);
 
   return (
     <VStack
@@ -607,6 +636,24 @@ export const ConfigSection: React.FC = () => {
           >
             Show stats
           </Checkbox>
+          <HStack gap={2} wrap={"wrap"}>
+            <Text>Draw the path for the last </Text>
+            <Input
+              size={"sm"}
+              placeholder="3"
+              value={drawForValue}
+              onChange={(e) => {
+                setDrawForValue(e.target.value);
+              }}
+              borderRadius={0}
+              borderColor={drawForValueError ? "border.error" : "gray.subtle"}
+              width={"150px"}
+              marginRight={0}
+              _focus={{ outline: 0 }}
+              _active={{ outline: 0 }}
+            />
+            <Text> gate applied.</Text>
+          </HStack>
         </VStack>
       </CollapsibleCard>
     </VStack>
