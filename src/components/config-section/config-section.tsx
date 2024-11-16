@@ -52,6 +52,11 @@ import {
 import { Complex } from "@/types/bloch";
 import { TOLERANCE } from "@/lib/helper-operations";
 import { isUnitary } from "@/lib/is-unitary";
+import {
+  stateToAnglesString,
+  stateToCoordinatesString,
+  stateToKetString,
+} from "@/lib/state-parser";
 
 const math = create(all);
 
@@ -247,6 +252,10 @@ export const ConfigSection: React.FC = () => {
     setDrawPathForTheLastNGate(parsed);
   }, [drawForValue]);
 
+  const stateToPresent =
+    history[currentHistoryIndex > history.length - 1 ? 0 : currentHistoryIndex]
+      .currentState;
+
   return (
     <VStack
       alignSelf={"stretch"}
@@ -319,6 +328,29 @@ export const ConfigSection: React.FC = () => {
               )
             </Button>
           </Group>
+          <Button
+            size={"sm"}
+            variant={"subtle"}
+            onClick={() => applyGate(SGate)}
+          >
+            <strong>S</strong>
+          </Button>
+          <Button
+            size={"sm"}
+            variant={"subtle"}
+            onClick={() => applyGate(SaGate)}
+          >
+            <strong>
+              S<sup>†</sup>
+            </strong>
+          </Button>
+          <Button
+            size={"sm"}
+            variant={"subtle"}
+            onClick={() => applyGate(TGate)}
+          >
+            <strong>T</strong>
+          </Button>
           <PopoverRoot>
             <PopoverTrigger asChild>
               <Button size={"sm"} variant={"subtle"}>
@@ -491,30 +523,36 @@ export const ConfigSection: React.FC = () => {
               </PopoverBody>
             </PopoverContent>
           </PopoverRoot>
-          <Button
-            size={"sm"}
-            variant={"subtle"}
-            onClick={() => applyGate(SGate)}
-          >
-            <strong>S</strong>
-          </Button>
-          <Button
-            size={"sm"}
-            variant={"subtle"}
-            onClick={() => applyGate(SaGate)}
-          >
-            <strong>
-              S<sup>†</sup>
-            </strong>
-          </Button>
-          <Button
-            size={"sm"}
-            variant={"subtle"}
-            onClick={() => applyGate(TGate)}
-          >
-            <strong>T</strong>
-          </Button>
         </Group>
+      </CollapsibleCard>
+      <CollapsibleCard title="Current state">
+        <VStack w={"full"} gap={2} alignItems={"stretch"}>
+          <HStack gapX={4} gapY={1} wrap={"wrap"}>
+            <Text fontWeight={"700"}>Superposition state:</Text>
+            <Text>{stateToKetString(stateToPresent)}</Text>
+          </HStack>
+          <HStack gap={4} wrap={"wrap"}>
+            <Text fontWeight={"700"}>Rotation angles:</Text>
+            <HStack gap={12} wrap={"wrap"}>
+              <Text>{stateToAnglesString(stateToPresent).split(";")[0]}</Text>
+              <Text>{stateToAnglesString(stateToPresent).split(";")[1]}</Text>
+            </HStack>
+          </HStack>
+          <HStack gap={4} wrap={"wrap"}>
+            <Text fontWeight={"700"}>Coords:</Text>
+            <HStack gap={12} wrap={"wrap"}>
+              <Text>
+                {stateToCoordinatesString(stateToPresent).split(";")[0]}
+              </Text>
+              <Text>
+                {stateToCoordinatesString(stateToPresent).split(";")[1]}
+              </Text>
+              <Text>
+                {stateToCoordinatesString(stateToPresent).split(";")[2]}
+              </Text>
+            </HStack>
+          </HStack>
+        </VStack>
       </CollapsibleCard>
       <CollapsibleCard title="History">
         <VStack gap={4} alignSelf={"stretch"} alignItems={"stretch"}>

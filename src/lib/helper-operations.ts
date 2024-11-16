@@ -74,7 +74,7 @@ export const numberToExpression = (
     belowTolerance(Math.abs(x.value) - Math.abs(n)),
   );
   if (match === undefined) {
-    return `${n.toFixed(4)}`;
+    return `${n.toFixed(4).replace(/\.?0+$/, "")}`;
   }
 
   const isNegative = n < 0 && match.value !== 0;
