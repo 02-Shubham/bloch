@@ -1,11 +1,16 @@
 "use client";
 import { applyGateToState } from "@/lib/apply-gate";
+import {
+  serializeHistory,
+  deserializeHistory,
+} from "@/lib/serializer-deserializer";
 import { Gate, QuantumState } from "@/types/bloch";
 import {
   createContext,
   Dispatch,
   SetStateAction,
   useContext,
+  useEffect,
   useRef,
   useState,
 } from "react";
@@ -36,6 +41,10 @@ export interface AppContextType {
   // eslint-disable-next-line
   controlsRef: React.Ref<any>;
   resetRotation: () => void;
+  saveHistory: () => string;
+  restoreHistory: (serializedHistory: string) => void;
+  historyRestoreHappened: boolean;
+  historyRestorationSuccess: "success" | "error" | "unknown";
 }
 
 const INITIAL_QUANTUM_STATE: QuantumState = {
@@ -63,6 +72,10 @@ export const AppContext = createContext<AppContextType>({
   },
   controlsRef: null,
   resetRotation: () => null,
+  saveHistory: () => "",
+  restoreHistory: () => null,
+  historyRestoreHappened: false,
+  historyRestorationSuccess: "unknown",
 });
 
 export const AppContextProvider = ({
@@ -77,6 +90,10 @@ export const AppContextProvider = ({
   const [showAxesHelper, setShowAxesHelper] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [drawPathForTheLastNGate, setDrawPathForTheLastNGate] = useState(3);
+  const [historyRestoreHappened, setHistoryRestoreHappened] = useState(false);
+  const [historyRestorationSuccess, setHistoryRestorationSuccess] = useState<
+    "success" | "error" | "unknown"
+  >("unknown");
 
   const applyGate = (gate: Gate) => {
     const newItem: HistoryItem = {
@@ -118,6 +135,29 @@ export const AppContextProvider = ({
     setCurrentHistoryIndex(safeIndex);
   };
 
+  const saveHistory = (): string => {
+    return serializeHistory(history);
+  };
+
+  const restoreHistory = (serializedHistory: string) => {
+    try {
+      const deserialized = deserializeHistory(serializedHistory);
+      setCurrentHistoryIndex(0);
+      setHistory(deserialized);
+      setHistoryRestorationSuccess("success");
+    } catch (error) {
+      console.error("Invalid serialized state", error);
+      setHistoryRestorationSuccess("error");
+    }
+  };
+
+  useEffect(() => {
+    if (historyRestorationSuccess !== "unknown") {
+      setHistoryRestoreHappened(true);
+      setCurrentHistoryIndex(history.length - 1);
+    }
+  }, [historyRestorationSuccess]);
+
   return (
     <AppContext.Provider
       value={{
@@ -140,6 +180,10 @@ export const AppContextProvider = ({
         },
         controlsRef,
         resetRotation: handleReset,
+        saveHistory,
+        restoreHistory,
+        historyRestoreHappened,
+        historyRestorationSuccess,
       }}
     >
       {children}

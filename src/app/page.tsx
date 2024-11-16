@@ -3,10 +3,13 @@ import { BlochSphere } from "@/components/bloch-sphere/bloch-sphere";
 import { ConfigSection } from "@/components/config-section/config-section";
 import { GithubButton } from "@/components/github-icon/github-icon";
 import { ColorModeButton } from "@/components/ui/color-mode";
+import { toaster } from "@/components/ui/toaster";
 import { useAppContext } from "@/state/app-context";
 import { Box, Stack, VStack } from "@chakra-ui/react";
 
 import { Noto_Sans_Math } from "next/font/google";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 const notoSansMath = Noto_Sans_Math({
   subsets: ["math"],
@@ -20,7 +23,37 @@ export default function Home() {
     currentHistoryIndex,
     settings: { showAxesHelper, showStats, drawPathForTheLastNGate },
     controlsRef,
+    restoreHistory,
+    historyRestorationSuccess,
+    historyRestoreHappened,
   } = useAppContext();
+
+  const searchParams = useSearchParams();
+  const serializedState = searchParams.get("state");
+
+  useEffect(() => {
+    if (historyRestoreHappened === false && serializedState) {
+      restoreHistory(serializedState);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (historyRestorationSuccess !== "unknown") {
+      if (historyRestorationSuccess === "success") {
+        toaster.create({
+          title: "State restored successfully",
+          type: "success",
+          duration: 2000,
+        });
+      } else {
+        toaster.create({
+          title: "Could not restore state",
+          type: "error",
+          duration: 2000,
+        });
+      }
+    }
+  }, [historyRestoreHappened, historyRestorationSuccess]);
 
   const drawnHistory =
     currentHistoryIndex === 0

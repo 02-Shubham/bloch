@@ -19,6 +19,7 @@ import {
   LuCircleDot,
   LuMove3D,
   LuRedo,
+  LuShare,
   LuUndo,
   LuUndo2,
 } from "react-icons/lu";
@@ -57,6 +58,8 @@ import {
   stateToCoordinatesString,
   stateToKetString,
 } from "@/lib/state-parser";
+import { useColorModeValue } from "@/components/ui/color-mode";
+import { toaster } from "@/components/ui/toaster";
 
 const math = create(all);
 
@@ -80,6 +83,7 @@ export const ConfigSection: React.FC = () => {
     history,
     currentHistoryIndex,
     resetRotation,
+    saveHistory,
   } = useAppContext();
 
   const [phiExpression, setPhiExpression] = useState("pi/2");
@@ -699,6 +703,33 @@ export const ConfigSection: React.FC = () => {
               </TimelineRoot>
             </Card.Body>
           </Card.Root>
+          <Button
+            alignSelf={"flex-start"}
+            size={"sm"}
+            variant={"subtle"}
+            background={"#317572"}
+            _hover={{ background: useColorModeValue("teal.700", "teal.600") }}
+            color={"teal.contrast"}
+            onClick={() => {
+              toaster.promise(
+                navigator.clipboard.writeText(
+                  `${window.location.origin}/?state=${saveHistory()}`,
+                ),
+                {
+                  success: {
+                    title: "Shareable link is copied to clipboard",
+                    duration: 2000,
+                  },
+                  error: {
+                    title: "Could not share current history",
+                  },
+                  loading: { title: "Saving..." },
+                },
+              );
+            }}
+          >
+            <LuShare /> Share
+          </Button>
         </VStack>
       </CollapsibleCard>
       <CollapsibleCard title="Settings">

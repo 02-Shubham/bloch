@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Provider } from "@/components/ui/provider";
 import { AppContextProvider } from "@/state/app-context";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "Bloch sphere simulator",
@@ -19,6 +20,7 @@ export default function RootLayout({
     <html suppressHydrationWarning lang="en">
       <body>
         <Provider>
+          <Toaster />
           <AppContextProvider>{children}</AppContextProvider>
         </Provider>
       </body>
