@@ -24,6 +24,7 @@ export interface AppContextType {
   resetHistory: (toState?: QuantumState) => void;
   canUndo: () => boolean;
   canRedo: () => boolean;
+  goToState: (index: number) => void;
   settings: {
     showAxesHelper: boolean;
     setShowAxesHelper: Dispatch<SetStateAction<boolean>>;
@@ -51,6 +52,7 @@ export const AppContext = createContext<AppContextType>({
   resetHistory: () => null,
   canUndo: () => false,
   canRedo: () => false,
+  goToState: () => false,
   settings: {
     showAxesHelper: false,
     setShowAxesHelper: () => null,
@@ -111,6 +113,12 @@ export const AppContextProvider = ({
     controlsRef.current?.reset();
   };
 
+  const goToState = (index: number) => {
+    const safeIndex = Math.min(Math.max(index, 0), history.length - 1);
+    console.log({ index, safeIndex });
+    setCurrentHistoryIndex(safeIndex);
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -122,6 +130,7 @@ export const AppContextProvider = ({
         resetHistory,
         canUndo,
         canRedo,
+        goToState,
         settings: {
           showAxesHelper,
           setShowAxesHelper,

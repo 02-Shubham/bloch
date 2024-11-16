@@ -72,6 +72,7 @@ export const ConfigSection: React.FC = () => {
     },
     undo,
     redo,
+    goToState,
     resetHistory,
     applyGate,
     canUndo,
@@ -606,6 +607,10 @@ export const ConfigSection: React.FC = () => {
                           : index > reversedCurrentHistoryIndex
                             ? { bg: "gray.solid", color: "gray.contrast" }
                             : {})}
+                        cursor={"pointer"}
+                        onClick={() => {
+                          goToState(history.length - 1 - index);
+                        }}
                       >
                         {index === reversedCurrentHistoryIndex ? (
                           <LuCircleDot />
