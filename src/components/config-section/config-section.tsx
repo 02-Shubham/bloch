@@ -60,6 +60,7 @@ import {
 } from "@/lib/state-parser";
 import { useColorModeValue } from "@/components/ui/color-mode";
 import { toaster } from "@/components/ui/toaster";
+import { useSearchParams } from "next/navigation";
 
 const math = create(all);
 
@@ -84,7 +85,37 @@ export const ConfigSection: React.FC = () => {
     currentHistoryIndex,
     resetRotation,
     saveHistory,
+    historyRestorationSuccess,
+    historyRestoreHappened,
+    restoreHistory,
   } = useAppContext();
+
+  const searchParams = useSearchParams();
+  const serializedState = searchParams.get("state");
+
+  useEffect(() => {
+    if (historyRestoreHappened === false && serializedState) {
+      restoreHistory(serializedState);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (historyRestorationSuccess !== "unknown") {
+      if (historyRestorationSuccess === "success") {
+        toaster.create({
+          title: "State restored successfully",
+          type: "success",
+          duration: 2000,
+        });
+      } else {
+        toaster.create({
+          title: "Could not restore state",
+          type: "error",
+          duration: 2000,
+        });
+      }
+    }
+  }, [historyRestoreHappened, historyRestorationSuccess]);
 
   const [phiExpression, setPhiExpression] = useState("pi/2");
   const [phiError, setPhiError] = useState(false);
