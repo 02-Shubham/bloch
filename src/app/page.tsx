@@ -1,6 +1,7 @@
 "use client";
 import { BlochSphere } from "@/components/bloch-sphere/bloch-sphere";
 import { ConfigSection } from "@/components/config-section/config-section";
+import { GithubButton } from "@/components/github-icon/github-icon";
 import { ColorModeButton } from "@/components/ui/color-mode";
 import { useAppContext } from "@/state/app-context";
 import { Box, Stack, VStack } from "@chakra-ui/react";
@@ -45,6 +46,9 @@ export default function Home() {
     >
       <Box position={"absolute"} top={"6px"} right={"6px"} zIndex={100}>
         <ColorModeButton />
+      </Box>
+      <Box position={"absolute"} top={"6px"} right={"48px"} zIndex={100}>
+        <GithubButton />
       </Box>
       <Stack
         direction={{ base: "column", md: "row" }}
