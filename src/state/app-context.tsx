@@ -115,7 +115,6 @@ export const AppContextProvider = ({
 
   const goToState = (index: number) => {
     const safeIndex = Math.min(Math.max(index, 0), history.length - 1);
-    console.log({ index, safeIndex });
     setCurrentHistoryIndex(safeIndex);
   };
 
