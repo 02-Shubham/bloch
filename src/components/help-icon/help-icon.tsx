@@ -61,7 +61,7 @@ export const HelpButton: React.FC = () => {
           The Bloch sphere provides a 3D representation of quantum states, where the north and south poles represent the basis states, ∣0⟩ and ∣1⟩, respectively. Unitary transformations, which encompass quantum gates and other quantum operations, appear on the Bloch sphere as rotations. These rotations around specific axes correspond to particular unitary transformations that modify the quantum states.`}</Text>
             </VStack>
             <Image
-              src="/meme.png"
+              src="/meme.webp"
               width={500}
               height={500}
               alt="Very funny meme about quantum theory"
