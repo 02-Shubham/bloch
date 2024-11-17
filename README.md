@@ -22,7 +22,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## About the app
 
-This project implements an interactive Bloch sphere visualisation for qubits, offering insights into quantum states.
+This project implements an interactive Bloch sphere what is a geometrical representation used to visualize the state of a qubit, the fundamental unit of quantum information. It maps the qubit state onto a point on a sphere, allowing an intuitive understanding of quantum superposition and phase. With its simple 3D model, the Bloch sphere helps bridge the gap between complex quantum concepts and visual learning, making it an essential tool for anyone studying quantum computing or quantum mechanics.
 
 ### Features
 - **Quantum Gates**: Apply predefined quantum gates (X, Y, Z, H) or add custom gates.
@@ -32,4 +32,6 @@ This project implements an interactive Bloch sphere visualisation for qubits, of
     **a|0⟩ + b|1⟩**.  
   - Examine the state’s coordinates in euclidean space and angular representation.
 - **History Tracking**: Undo actions with the history feature and share your progress.
+- **Undo**: Undos an action.
+- **Reset**: Resets to the deafault state.
 
