@@ -1216,7 +1216,7 @@ export const ConfigSection: React.FC = () => {
             Show stats
           </Checkbox>
           <HStack gap={2} wrap={"wrap"}>
-            <Text>Draw the path for the last </Text>
+            <Text>Draw the trace for the last </Text>
             <Input
               size={"sm"}
               placeholder="3"
