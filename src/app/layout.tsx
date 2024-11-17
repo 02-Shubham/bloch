@@ -26,7 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning lang="en">
-      <body className={notoSansMath.className}>
+      <body
+        className={notoSansMath.className}
+        style={{ maxWidth: "100vw", maxHeight: "100vh", overflow: "hidden" }}
+      >
         <Provider>
           <Toaster />
           <AppContextProvider>{children}</AppContextProvider>

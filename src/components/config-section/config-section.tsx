@@ -360,6 +360,7 @@ export const ConfigSection: React.FC = () => {
               closeDelay={100}
               /* open={gatesHelpOpen}
               onOpenChange={(e) => setGatesHelpOpen(e.open)} */
+              positioning={{ overlap: true, fitViewport: true }}
             >
               <HoverCardTrigger asChild>
                 <Box display={{ base: "none", md: "block" }}>
@@ -386,7 +387,12 @@ export const ConfigSection: React.FC = () => {
               </HoverCardTrigger>
               <HoverCardContent width="432px" maxWidth={"432px"}>
                 <HoverCardArrow />
-                <Box width="400px" whiteSpace={"pre-line"}>
+                <Box
+                  width="400px"
+                  whiteSpace={"pre-line"}
+                  maxHeight={"70vh"}
+                  overflowY={"scroll"}
+                >
                   <Latex>{String.raw`The well-known 1-bit quantum gates include the following:
 
                   $-$ Pauli-X Gate ($X$)
@@ -806,6 +812,7 @@ export const ConfigSection: React.FC = () => {
               closeDelay={100}
               /* open={statesHelpOpen}
               onOpenChange={(e) => setStatesHelpOpen(e.open)} */
+              positioning={{ overlap: true, fitViewport: true }}
             >
               <HoverCardTrigger asChild>
                 <Box display={{ base: "none", md: "block" }}>
@@ -832,7 +839,7 @@ export const ConfigSection: React.FC = () => {
               </HoverCardTrigger>
               <HoverCardContent width="432px" maxWidth={"432px"}>
                 <HoverCardArrow />
-                <Box width="400px">
+                <Box width="400px" maxHeight={"70vh"} overflowY={"scroll"}>
                   <Latex>
                     {String.raw`The two basis states:
 
