@@ -120,7 +120,7 @@ export const ConfigSection: React.FC = () => {
   const [phiExpression, setPhiExpression] = useState("pi/2");
   const [phiError, setPhiError] = useState(false);
   const [calculatedPhiExpression, setCalculatedPhiExpression] = useState(
-    Math.PI / 2,
+    Math.PI / 2
   );
 
   const handlePhiChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -190,7 +190,7 @@ export const ConfigSection: React.FC = () => {
     }
 
     setCustomGateError(
-      "The given matrix is not a valid quantum gate because it's not unitary",
+      "The given matrix is not a valid quantum gate because it's not unitary"
     );
   }, [
     calculatedCustom00Expression,
@@ -207,7 +207,7 @@ export const ConfigSection: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement>,
     setExpression: (expression: string) => void,
     setCalculatedExpression: (calculatedExpression: Complex) => void,
-    setError: (error: boolean) => void,
+    setError: (error: boolean) => void
   ) => {
     const newValue = e.target.value;
     setExpression(newValue);
@@ -242,7 +242,7 @@ export const ConfigSection: React.FC = () => {
   const scrollToActiveItem = () => {
     const container = containerRef.current;
     const activeItem = itemRefs.current.get(
-      history.length - 1 - currentHistoryIndex,
+      history.length - 1 - currentHistoryIndex
     );
 
     if (container && activeItem) {
@@ -268,7 +268,7 @@ export const ConfigSection: React.FC = () => {
   }, [currentHistoryIndex]);
 
   const [drawForValue, setDrawForValue] = useState(
-    drawPathForTheLastNGate.toString(),
+    drawPathForTheLastNGate.toString()
   );
   const [drawForValueError, setDrawForValueError] = useState(false);
 
@@ -416,7 +416,7 @@ export const ConfigSection: React.FC = () => {
                           e,
                           setCustom00Expression,
                           setCalculatedCustom00Expression,
-                          setCustom00Error,
+                          setCustom00Error
                         )
                       }
                       borderRadius={0}
@@ -438,7 +438,7 @@ export const ConfigSection: React.FC = () => {
                           e,
                           setCustom01Expression,
                           setCalculatedCustom01Expression,
-                          setCustom01Error,
+                          setCustom01Error
                         )
                       }
                       borderRadius={0}
@@ -478,7 +478,7 @@ export const ConfigSection: React.FC = () => {
                           e,
                           setCustom10Expression,
                           setCalculatedCustom10Expression,
-                          setCustom10Error,
+                          setCustom10Error
                         )
                       }
                       borderRadius={0}
@@ -500,7 +500,7 @@ export const ConfigSection: React.FC = () => {
                           e,
                           setCustom11Expression,
                           setCalculatedCustom11Expression,
-                          setCustom11Error,
+                          setCustom11Error
                         )
                       }
                       borderRadius={0}
@@ -545,8 +545,8 @@ export const ConfigSection: React.FC = () => {
                                 _01: custom01Expression,
                                 _10: custom10Expression,
                                 _11: custom11Expression,
-                              },
-                            ),
+                              }
+                            )
                           )
                         }
                         disabled={customGateError !== null}
@@ -617,6 +617,134 @@ export const ConfigSection: React.FC = () => {
             >
               <LuUndo2 /> Reset state to ∣0⟩
             </Button>
+            <PopoverRoot>
+              <PopoverTrigger asChild>
+                <Button size={"sm"} variant={"subtle"} colorPalette={"orange"}>
+                  <LuUndo2 /> Reset to custom state
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverBody>
+                  <SimpleGrid columns={4} columnGap={2}>
+                    <GridItem>
+                      <Text
+                        fontSize={"40px"}
+                        lineHeight={"40px"}
+                        textAlign={"center"}
+                      >
+                        ⎡
+                      </Text>
+                    </GridItem>
+                    <GridItem colSpan={2} paddingBottom={1}>
+                      <Input
+                        size={"sm"}
+                        placeholder="1/sqrt(2)"
+                        value={custom00Expression}
+                        onChange={(e) =>
+                          handleCustomChange(
+                            e,
+                            setCustom00Expression,
+                            setCalculatedCustom00Expression,
+                            setCustom00Error
+                          )
+                        }
+                        borderRadius={0}
+                        borderColor={
+                          custom00Error ? "border.error" : "gray.solid"
+                        }
+                        marginRight={0}
+                        _focus={{ outline: 0 }}
+                        _active={{ outline: 0 }}
+                      />
+                    </GridItem>
+                    <GridItem>
+                      <Text
+                        fontSize={"40px"}
+                        lineHeight={"40px"}
+                        textAlign={"center"}
+                      >
+                        ⎤
+                      </Text>
+                    </GridItem>
+                    <GridItem>
+                      <Text
+                        fontSize={"40px"}
+                        lineHeight={"40px"}
+                        textAlign={"center"}
+                      >
+                        ⎣
+                      </Text>
+                    </GridItem>
+                    <GridItem colSpan={2} paddingTop={1}>
+                      <Input
+                        size={"sm"}
+                        placeholder="1/sqrt(2)"
+                        value={custom10Expression}
+                        onChange={(e) =>
+                          handleCustomChange(
+                            e,
+                            setCustom10Expression,
+                            setCalculatedCustom10Expression,
+                            setCustom10Error
+                          )
+                        }
+                        borderRadius={0}
+                        borderColor={
+                          custom10Error ? "border.error" : "gray.solid"
+                        }
+                        marginRight={0}
+                        _focus={{ outline: 0 }}
+                        _active={{ outline: 0 }}
+                      />
+                    </GridItem>
+                    <GridItem>
+                      <Text
+                        fontSize={"40px"}
+                        lineHeight={"40px"}
+                        textAlign={"center"}
+                      >
+                        ⎦
+                      </Text>
+                    </GridItem>
+                    <GridItem colSpan={4} paddingTop={4}>
+                      <VStack w={"full"} alignItems={"stretch"} gap={2}>
+                        {customGateError !== null && (
+                          <Text colorPalette={"red"} textAlign={"center"}>
+                            {customGateError}
+                          </Text>
+                        )}
+                        <Button
+                          size={"sm"}
+                          variant={"subtle"}
+                          onClick={() =>
+                            applyGate(
+                              CustomGate(
+                                {
+                                  _00: calculatedCustom00Expression,
+                                  _01: calculatedCustom01Expression,
+                                  _10: calculatedCustom10Expression,
+                                  _11: calculatedCustom11Expression,
+                                },
+                                {
+                                  _00: custom00Expression,
+                                  _01: custom01Expression,
+                                  _10: custom10Expression,
+                                  _11: custom11Expression,
+                                }
+                              )
+                            )
+                          }
+                          disabled={customGateError !== null}
+                        >
+                          <strong>Apply gate</strong>
+                        </Button>
+                      </VStack>
+                    </GridItem>
+                  </SimpleGrid>
+                </PopoverBody>
+              </PopoverContent>
+            </PopoverRoot>
           </Group>
           <Card.Root
             w={"full"}
@@ -640,8 +768,8 @@ export const ConfigSection: React.FC = () => {
                         {...(index === reversedCurrentHistoryIndex
                           ? { bg: "#317572", color: "teal.contrast" }
                           : index > reversedCurrentHistoryIndex
-                            ? { bg: "gray.solid", color: "gray.contrast" }
-                            : {})}
+                          ? { bg: "gray.solid", color: "gray.contrast" }
+                          : {})}
                         cursor={"pointer"}
                         onClick={() => {
                           goToState(history.length - 1 - index);
@@ -677,7 +805,10 @@ export const ConfigSection: React.FC = () => {
                         </TimelineTitle>
                         {item.gateUsed.name === "P" && (
                           <TimelineDescription>
-                            {`ϕ = ${item.gateUsed.originalExpression ?? item.gateUsed.phi}`}
+                            {`ϕ = ${
+                              item.gateUsed.originalExpression ??
+                              item.gateUsed.phi
+                            }`}
                           </TimelineDescription>
                         )}
                         {item.gateUsed.name === "custom" && (
@@ -744,7 +875,7 @@ export const ConfigSection: React.FC = () => {
             onClick={() => {
               toaster.promise(
                 navigator.clipboard.writeText(
-                  `${window.location.origin}/?state=${saveHistory()}`,
+                  `${window.location.origin}/?state=${saveHistory()}`
                 ),
                 {
                   success: {
@@ -755,7 +886,7 @@ export const ConfigSection: React.FC = () => {
                     title: "Could not share current history",
                   },
                   loading: { title: "Saving..." },
-                },
+                }
               );
             }}
           >
