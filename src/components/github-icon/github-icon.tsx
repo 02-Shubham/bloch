@@ -10,7 +10,7 @@ export const GithubButton: React.FC = () => {
           window.open("https://github.com/dolnaaa/bloch-sphere", "_blank");
         }}
         variant="ghost"
-        aria-label="Toggle color mode"
+        aria-label="Navigate to github"
         size="sm"
         css={{
           _icon: {
