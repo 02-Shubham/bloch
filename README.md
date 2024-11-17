@@ -32,6 +32,6 @@ This project implements an interactive Bloch sphere what is a geometrical repres
     **$a|0\rangle + b|1\rangle$**.  
   - Examine the state’s coordinates in euclidean space and angular representation.
 - **History Tracking**: Undo actions with the history feature and share your progress.
-- **Undo**: Undos an action.
+- **Undo**: Undoes an action.
 - **Reset**: Resets to the deafault state.
 
