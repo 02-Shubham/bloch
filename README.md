@@ -20,17 +20,16 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## About the app
 
-To learn more about Next.js, take a look at the following resources:
+This project implements an interactive Bloch sphere visualisation for qubits, offering insights into quantum states.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Features
+- **Quantum Gates**: Apply predefined quantum gates (X, Y, Z, H) or add custom gates.
+- **Comprehensive Qubit State Representation**:  
+  - View the qubit state as a vector inside the Bloch sphere.  
+  - Displays the current state in the form:  
+    **a|0⟩ + b|1⟩**.  
+  - Examine the state’s coordinates in euclidean space and angular representation.
+- **History Tracking**: Undo actions with the history feature and share your progress.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
