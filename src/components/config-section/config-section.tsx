@@ -21,7 +21,6 @@ import {
   LuRedo,
   LuShare,
   LuUndo,
-  LuUndo2,
 } from "react-icons/lu";
 import {
   CustomGate,
@@ -51,7 +50,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Complex } from "@/types/bloch";
-import { TOLERANCE } from "@/lib/helper-operations";
+import { isQuantumStateValid, TOLERANCE } from "@/lib/helper-operations";
 import { isUnitary } from "@/lib/is-unitary";
 import {
   stateToAnglesString,
@@ -291,6 +290,42 @@ export const ConfigSection: React.FC = () => {
   const stateToPresent =
     history[currentHistoryIndex > history.length - 1 ? 0 : currentHistoryIndex]
       .currentState;
+
+  const [ket0Expression, setKet0Expression] = useState("0");
+  const [ket0Error, setKet0Error] = useState(false);
+  const [calculatedKet0Expression, setCalculatedKet0Expression] =
+    useState<Complex>({ real: 0, imag: 0 });
+  const [ket1Expression, setKet1Expression] = useState("i");
+  const [ket1Error, setKet1Error] = useState(false);
+  const [calculatedKet1Expression, setCalculatedKet1Expression] =
+    useState<Complex>({ real: 0, imag: 1 });
+  const [customStateError, setCustomStateError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (ket0Error || ket1Error) {
+      setCustomStateError("Invalid expression(s)");
+      return;
+    }
+
+    if (
+      isQuantumStateValid({
+        a: calculatedKet0Expression,
+        b: calculatedKet1Expression,
+      })
+    ) {
+      setCustomStateError(null);
+      return;
+    }
+
+    setCustomStateError(
+      "The given state is not a valid quantum state because it's length is not 1",
+    );
+  }, [
+    calculatedKet0Expression,
+    calculatedKet1Expression,
+    ket0Error,
+    ket1Error,
+  ]);
 
   return (
     <VStack
@@ -609,142 +644,135 @@ export const ConfigSection: React.FC = () => {
             >
               <LuRedo /> Redo
             </Button>
-            <Button
-              size={"sm"}
-              variant={"subtle"}
-              colorPalette={"red"}
-              onClick={() => resetHistory()}
-            >
-              <LuUndo2 /> Reset state to ∣0⟩
-            </Button>
-            <PopoverRoot>
-              <PopoverTrigger asChild>
-                <Button size={"sm"} variant={"subtle"} colorPalette={"orange"}>
-                  <LuUndo2 /> Reset to custom state
+            <HStack wrap={"nowrap"} gap={2}>
+              <Text> Reset state to:</Text>
+              <Group gap={1}>
+                <Button
+                  size={"sm"}
+                  variant={"subtle"}
+                  colorPalette={"red"}
+                  onClick={() => resetHistory()}
+                >
+                  ∣0⟩
                 </Button>
-              </PopoverTrigger>
-              <PopoverContent>
-                <PopoverArrow />
-                <PopoverBody>
-                  <SimpleGrid columns={4} columnGap={2}>
-                    <GridItem>
-                      <Text
-                        fontSize={"40px"}
-                        lineHeight={"40px"}
-                        textAlign={"center"}
-                      >
-                        ⎡
-                      </Text>
-                    </GridItem>
-                    <GridItem colSpan={2} paddingBottom={1}>
-                      <Input
-                        size={"sm"}
-                        placeholder="1/sqrt(2)"
-                        value={custom00Expression}
-                        onChange={(e) =>
-                          handleCustomChange(
-                            e,
-                            setCustom00Expression,
-                            setCalculatedCustom00Expression,
-                            setCustom00Error,
-                          )
-                        }
-                        borderRadius={0}
-                        borderColor={
-                          custom00Error ? "border.error" : "gray.solid"
-                        }
-                        marginRight={0}
-                        _focus={{ outline: 0 }}
-                        _active={{ outline: 0 }}
-                      />
-                    </GridItem>
-                    <GridItem>
-                      <Text
-                        fontSize={"40px"}
-                        lineHeight={"40px"}
-                        textAlign={"center"}
-                      >
-                        ⎤
-                      </Text>
-                    </GridItem>
-                    <GridItem>
-                      <Text
-                        fontSize={"40px"}
-                        lineHeight={"40px"}
-                        textAlign={"center"}
-                      >
-                        ⎣
-                      </Text>
-                    </GridItem>
-                    <GridItem colSpan={2} paddingTop={1}>
-                      <Input
-                        size={"sm"}
-                        placeholder="1/sqrt(2)"
-                        value={custom10Expression}
-                        onChange={(e) =>
-                          handleCustomChange(
-                            e,
-                            setCustom10Expression,
-                            setCalculatedCustom10Expression,
-                            setCustom10Error,
-                          )
-                        }
-                        borderRadius={0}
-                        borderColor={
-                          custom10Error ? "border.error" : "gray.solid"
-                        }
-                        marginRight={0}
-                        _focus={{ outline: 0 }}
-                        _active={{ outline: 0 }}
-                      />
-                    </GridItem>
-                    <GridItem>
-                      <Text
-                        fontSize={"40px"}
-                        lineHeight={"40px"}
-                        textAlign={"center"}
-                      >
-                        ⎦
-                      </Text>
-                    </GridItem>
-                    <GridItem colSpan={4} paddingTop={4}>
-                      <VStack w={"full"} alignItems={"stretch"} gap={2}>
-                        {customGateError !== null && (
-                          <Text colorPalette={"red"} textAlign={"center"}>
-                            {customGateError}
+                <PopoverRoot>
+                  <PopoverTrigger asChild>
+                    <Button size={"sm"} variant={"subtle"} colorPalette={"red"}>
+                      custom
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <PopoverArrow />
+                    <PopoverBody>
+                      <SimpleGrid columns={4} columnGap={2}>
+                        <GridItem>
+                          <Text
+                            fontSize={"40px"}
+                            lineHeight={"40px"}
+                            textAlign={"center"}
+                          >
+                            ⎡
                           </Text>
-                        )}
-                        <Button
-                          size={"sm"}
-                          variant={"subtle"}
-                          onClick={() =>
-                            applyGate(
-                              CustomGate(
-                                {
-                                  _00: calculatedCustom00Expression,
-                                  _01: calculatedCustom01Expression,
-                                  _10: calculatedCustom10Expression,
-                                  _11: calculatedCustom11Expression,
-                                },
-                                {
-                                  _00: custom00Expression,
-                                  _01: custom01Expression,
-                                  _10: custom10Expression,
-                                  _11: custom11Expression,
-                                },
-                              ),
-                            )
-                          }
-                          disabled={customGateError !== null}
-                        >
-                          <strong>Apply gate</strong>
-                        </Button>
-                      </VStack>
-                    </GridItem>
-                  </SimpleGrid>
-                </PopoverBody>
-              </PopoverContent>
-            </PopoverRoot>
+                        </GridItem>
+                        <GridItem colSpan={2} paddingBottom={1}>
+                          <Input
+                            size={"sm"}
+                            placeholder="0"
+                            value={ket0Expression}
+                            onChange={(e) => {
+                              handleCustomChange(
+                                e,
+                                setKet0Expression,
+                                setCalculatedKet0Expression,
+                                setKet0Error,
+                              );
+                            }}
+                            borderRadius={0}
+                            borderColor={
+                              ket0Error ? "border.error" : "gray.solid"
+                            }
+                            marginRight={0}
+                            _focus={{ outline: 0 }}
+                            _active={{ outline: 0 }}
+                          />
+                        </GridItem>
+                        <GridItem>
+                          <Text
+                            fontSize={"40px"}
+                            lineHeight={"40px"}
+                            textAlign={"center"}
+                          >
+                            ⎤
+                          </Text>
+                        </GridItem>
+                        <GridItem>
+                          <Text
+                            fontSize={"40px"}
+                            lineHeight={"40px"}
+                            textAlign={"center"}
+                          >
+                            ⎣
+                          </Text>
+                        </GridItem>
+                        <GridItem colSpan={2} paddingTop={1}>
+                          <Input
+                            size={"sm"}
+                            placeholder="0"
+                            value={ket1Expression}
+                            onChange={(e) => {
+                              handleCustomChange(
+                                e,
+                                setKet1Expression,
+                                setCalculatedKet1Expression,
+                                setKet1Error,
+                              );
+                            }}
+                            borderRadius={0}
+                            borderColor={
+                              ket1Error ? "border.error" : "gray.solid"
+                            }
+                            marginRight={0}
+                            _focus={{ outline: 0 }}
+                            _active={{ outline: 0 }}
+                          />
+                        </GridItem>
+                        <GridItem>
+                          <Text
+                            fontSize={"40px"}
+                            lineHeight={"40px"}
+                            textAlign={"center"}
+                          >
+                            ⎦
+                          </Text>
+                        </GridItem>
+                        <GridItem colSpan={4} paddingTop={4}>
+                          <VStack w={"full"} alignItems={"stretch"} gap={2}>
+                            {customStateError !== null && (
+                              <Text colorPalette={"red"} textAlign={"center"}>
+                                {customStateError}
+                              </Text>
+                            )}
+                            <Button
+                              size={"sm"}
+                              variant={"subtle"}
+                              onClick={() => {
+                                resetHistory({
+                                  a: calculatedKet0Expression,
+                                  b: calculatedKet1Expression,
+                                });
+                              }}
+                              disabled={customStateError !== null}
+                            >
+                              <strong>Reset to described state</strong>
+                            </Button>
+                          </VStack>
+                        </GridItem>
+                      </SimpleGrid>
+                    </PopoverBody>
+                  </PopoverContent>
+                </PopoverRoot>
+              </Group>
+            </HStack>
           </Group>
           <Card.Root
             w={"full"}
@@ -787,7 +815,7 @@ export const ConfigSection: React.FC = () => {
                         <TimelineTitle>
                           <Text>
                             {item.gateUsed.name === "init" ? (
-                              "Initialized with ∣0⟩"
+                              `Initialized with ${stateToKetString(item.currentState)}`
                             ) : (
                               <>
                                 {item.gateUsed.name === "S†" ? (

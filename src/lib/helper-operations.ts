@@ -90,3 +90,16 @@ export const isEqualQuantumState = (
   q1: QuantumState,
   q2: QuantumState,
 ): boolean => isCloseComplex(q1.a, q2.a) && isCloseComplex(q1.b, q2.b);
+
+export const quantumStateLength = (state: QuantumState): number => {
+  return Math.sqrt(
+    state.a.real ** 2 +
+      state.a.imag ** 2 +
+      state.b.real ** 2 +
+      state.b.imag ** 2,
+  );
+};
+
+export const isQuantumStateValid = (state: QuantumState): boolean => {
+  return belowTolerance(quantumStateLength(state) - 1);
+};
