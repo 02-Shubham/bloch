@@ -384,10 +384,31 @@ export const ConfigSection: React.FC = () => {
                   </ClientOnly>
                 </Box>
               </HoverCardTrigger>
-              <HoverCardContent width="364px" maxWidth={"364px"}>
+              <HoverCardContent width="432px" maxWidth={"432px"}>
                 <HoverCardArrow />
-                <Box width="332px">
-                  <Latex>{String.raw`Gates explanation`}</Latex>
+                <Box width="400px" whiteSpace={"pre-line"}>
+                  <Latex>{String.raw`The well-known 1-bit quantum gates include the following:
+
+                  $-$ Pauli-X Gate ($X$)
+                  $-$ Pauli-Y Gate ($Y$)
+                  $-$ Pauli-Z Gate ($Z$)
+                  $-$ Hadamard Gate ($H$)
+                  $-$ Phase Gate ($P(\phi)$)
+                  $-$ Specific phase gates ($S, S^\dagger, T$)
+
+                  To apply a 1-bit quantum gate to a general quantum state \( \psi = a\ket{0} + b\ket{1} \), you represent the quantum state as a vector:
+                  \[
+                  \psi = \begin{bmatrix} a \\ b \end{bmatrix}
+                  \] Each gate corresponds to a specific unitary matrix \( U \). Applying the gate to the state involves multiplying the state vector by the gate matrix:
+                  \[
+                  \psi' = U \psi = U \begin{bmatrix} a \\ b \end{bmatrix}
+                  \] where \( \psi' \) is the transformed quantum state. This operation evolves the state based on the chosen gate's transformation properties.
+
+                  A quantum gate is valid if it is unitary, meaning its matrix representation \( U \) satisfies the following:
+                  \[
+                  U^\dagger U = U U^\dagger = I
+                  \]
+                  where \( U^\dagger \) is the conjugate transpose of \( U \).`}</Latex>
                 </Box>
               </HoverCardContent>
             </HoverCardRoot>
@@ -409,9 +430,11 @@ export const ConfigSection: React.FC = () => {
               <HoverCardArrow />
               <Box>
                 <Latex>
-                  {String.raw`$$
+                  {String.raw`
+                  $$
                   X = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}
-                  $$`}
+                  $$
+                  The X gate flips the state of a qubit along the X-axis of the Bloch sphere.`}
                 </Latex>
               </Box>
             </HoverCardContent>
@@ -432,7 +455,8 @@ export const ConfigSection: React.FC = () => {
                 <Latex>
                   {String.raw`$$
                   Y = \begin{bmatrix} 0 & -i \\ i & 0 \end{bmatrix}
-                  $$`}
+                  $$
+                  The Y gate introduces a combined flip and phase change by rotating the qubit around the Y-axis of the Bloch sphere by π. `}
                 </Latex>
               </Box>
             </HoverCardContent>
@@ -453,7 +477,8 @@ export const ConfigSection: React.FC = () => {
                 <Latex>
                   {String.raw`$$
                   Z = \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}
-                  $$`}
+                  $$
+                  The Z gate applies a phase flip, inverting the phase of the qubit's state along the Z-axis of the Bloch sphere. `}
                 </Latex>
               </Box>
             </HoverCardContent>
@@ -474,7 +499,8 @@ export const ConfigSection: React.FC = () => {
                 <Latex>
                   {String.raw`$$
                   H = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 & 1 \\ 1 & -1 \end{bmatrix}
-                  $$`}
+                  $$
+                  The H gate creates superposition by equally distributing the qubit's probability amplitude between its computational basis states and rotating it between the X and Z axes.`}
                 </Latex>
               </Box>
             </HoverCardContent>
@@ -522,7 +548,8 @@ export const ConfigSection: React.FC = () => {
                 <Latex>
                   {String.raw`$$
                   P = \begin{bmatrix} 1 & 0 \\ 0 & e^{i\phi} \end{bmatrix}
-                  $$`}
+                  $$
+                  The P gate introduces a controlled phase shift to a qubit's state, effectively adding a phase factor proportional to a specified angle. `}
                 </Latex>
               </Box>
             </HoverCardContent>
@@ -543,7 +570,8 @@ export const ConfigSection: React.FC = () => {
                 <Latex>
                   {String.raw`$$
                   S = \begin{bmatrix} 1 & 0 \\ 0 & i \end{bmatrix}
-                  $$`}
+                  $$
+                  The S gate applies a specific π/2 phase shift, introducing a quarter-turn rotation around the Z-axis. Basically it is a P(π/2) gate.`}
                 </Latex>
               </Box>
             </HoverCardContent>
@@ -566,7 +594,8 @@ export const ConfigSection: React.FC = () => {
                 <Latex>
                   {String.raw`$$
                   S^\dagger = \begin{bmatrix} 1 & 0 \\ 0 & -i \end{bmatrix}
-                  $$`}
+                  $$
+                  The $ S^\dagger $ gate reverses the effect of the S gate, applying a −π/2 phase shift and effectively performing the inverse rotation around the Z-axis. Basically it is a P(−π/2) gate.`}
                 </Latex>
               </Box>
             </HoverCardContent>
@@ -587,7 +616,8 @@ export const ConfigSection: React.FC = () => {
                 <Latex>
                   {String.raw`$$
                   T = \begin{bmatrix} 1 & 0 \\ 0 & e^{i\pi/4} \end{bmatrix}
-                  $$`}
+                  $$
+                  The T gate introduces a precise π/4 phase shift, often used in fault-tolerant quantum computing to approximate arbitrary single-qubit operations. Basically it is a P(π/4) gate.`}
                 </Latex>
               </Box>
             </HoverCardContent>
@@ -800,9 +830,9 @@ export const ConfigSection: React.FC = () => {
                   </ClientOnly>
                 </Box>
               </HoverCardTrigger>
-              <HoverCardContent width="364px" maxWidth={"364px"}>
+              <HoverCardContent width="432px" maxWidth={"432px"}>
                 <HoverCardArrow />
-                <Box width="332px">
+                <Box width="400px">
                   <Latex>
                     {String.raw`The two basis states:
 
@@ -820,7 +850,13 @@ export const ConfigSection: React.FC = () => {
 
                     \[
                     \vec{r} = \begin{pmatrix} \sin \theta \cos \phi \\ \sin \theta \sin \phi \\ \cos \theta \end{pmatrix} = \begin{pmatrix} u \\ v \\ w \end{pmatrix}
-                    \]`}
+                    \]
+
+                    For the state to be valid, the following normalization condition must hold:
+                    \[
+                    |a|^2 + |b|^2 = 1
+                    \]
+                    This ensures that the total probability of measuring the qubit in either state \( |0\rangle \) or \( |1\rangle \) is 1. Here, \( |a|^2 \) is the probability of observing \( |0\rangle \), and \( |b|^2 \) is the probability of observing \( |1\rangle \).`}
                   </Latex>
                 </Box>
               </HoverCardContent>
