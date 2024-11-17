@@ -120,7 +120,7 @@ export const ConfigSection: React.FC = () => {
   const [phiExpression, setPhiExpression] = useState("pi/2");
   const [phiError, setPhiError] = useState(false);
   const [calculatedPhiExpression, setCalculatedPhiExpression] = useState(
-    Math.PI / 2
+    Math.PI / 2,
   );
 
   const handlePhiChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -190,7 +190,7 @@ export const ConfigSection: React.FC = () => {
     }
 
     setCustomGateError(
-      "The given matrix is not a valid quantum gate because it's not unitary"
+      "The given matrix is not a valid quantum gate because it's not unitary",
     );
   }, [
     calculatedCustom00Expression,
@@ -207,7 +207,7 @@ export const ConfigSection: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement>,
     setExpression: (expression: string) => void,
     setCalculatedExpression: (calculatedExpression: Complex) => void,
-    setError: (error: boolean) => void
+    setError: (error: boolean) => void,
   ) => {
     const newValue = e.target.value;
     setExpression(newValue);
@@ -242,7 +242,7 @@ export const ConfigSection: React.FC = () => {
   const scrollToActiveItem = () => {
     const container = containerRef.current;
     const activeItem = itemRefs.current.get(
-      history.length - 1 - currentHistoryIndex
+      history.length - 1 - currentHistoryIndex,
     );
 
     if (container && activeItem) {
@@ -268,7 +268,7 @@ export const ConfigSection: React.FC = () => {
   }, [currentHistoryIndex]);
 
   const [drawForValue, setDrawForValue] = useState(
-    drawPathForTheLastNGate.toString()
+    drawPathForTheLastNGate.toString(),
   );
   const [drawForValueError, setDrawForValueError] = useState(false);
 
@@ -416,7 +416,7 @@ export const ConfigSection: React.FC = () => {
                           e,
                           setCustom00Expression,
                           setCalculatedCustom00Expression,
-                          setCustom00Error
+                          setCustom00Error,
                         )
                       }
                       borderRadius={0}
@@ -438,7 +438,7 @@ export const ConfigSection: React.FC = () => {
                           e,
                           setCustom01Expression,
                           setCalculatedCustom01Expression,
-                          setCustom01Error
+                          setCustom01Error,
                         )
                       }
                       borderRadius={0}
@@ -478,7 +478,7 @@ export const ConfigSection: React.FC = () => {
                           e,
                           setCustom10Expression,
                           setCalculatedCustom10Expression,
-                          setCustom10Error
+                          setCustom10Error,
                         )
                       }
                       borderRadius={0}
@@ -500,7 +500,7 @@ export const ConfigSection: React.FC = () => {
                           e,
                           setCustom11Expression,
                           setCalculatedCustom11Expression,
-                          setCustom11Error
+                          setCustom11Error,
                         )
                       }
                       borderRadius={0}
@@ -545,8 +545,8 @@ export const ConfigSection: React.FC = () => {
                                 _01: custom01Expression,
                                 _10: custom10Expression,
                                 _11: custom11Expression,
-                              }
-                            )
+                              },
+                            ),
                           )
                         }
                         disabled={customGateError !== null}
@@ -646,7 +646,7 @@ export const ConfigSection: React.FC = () => {
                             e,
                             setCustom00Expression,
                             setCalculatedCustom00Expression,
-                            setCustom00Error
+                            setCustom00Error,
                           )
                         }
                         borderRadius={0}
@@ -686,7 +686,7 @@ export const ConfigSection: React.FC = () => {
                             e,
                             setCustom10Expression,
                             setCalculatedCustom10Expression,
-                            setCustom10Error
+                            setCustom10Error,
                           )
                         }
                         borderRadius={0}
@@ -731,8 +731,8 @@ export const ConfigSection: React.FC = () => {
                                   _01: custom01Expression,
                                   _10: custom10Expression,
                                   _11: custom11Expression,
-                                }
-                              )
+                                },
+                              ),
                             )
                           }
                           disabled={customGateError !== null}
@@ -768,8 +768,8 @@ export const ConfigSection: React.FC = () => {
                         {...(index === reversedCurrentHistoryIndex
                           ? { bg: "#317572", color: "teal.contrast" }
                           : index > reversedCurrentHistoryIndex
-                          ? { bg: "gray.solid", color: "gray.contrast" }
-                          : {})}
+                            ? { bg: "gray.solid", color: "gray.contrast" }
+                            : {})}
                         cursor={"pointer"}
                         onClick={() => {
                           goToState(history.length - 1 - index);
@@ -875,7 +875,7 @@ export const ConfigSection: React.FC = () => {
             onClick={() => {
               toaster.promise(
                 navigator.clipboard.writeText(
-                  `${window.location.origin}/?state=${saveHistory()}`
+                  `${window.location.origin}/?state=${saveHistory()}`,
                 ),
                 {
                   success: {
@@ -886,7 +886,7 @@ export const ConfigSection: React.FC = () => {
                     title: "Could not share current history",
                   },
                   loading: { title: "Saving..." },
-                }
+                },
               );
             }}
           >
