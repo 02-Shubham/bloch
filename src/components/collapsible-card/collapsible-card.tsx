@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 
 export interface CollapsibleCardProps {
-  title: string;
+  title: string | JSX.Element;
   children: React.ReactNode;
 }
 
@@ -37,7 +37,7 @@ export const CollapsibleCard: React.FC<CollapsibleCardProps> = ({
               justifyContent={"space-between"}
               alignItems={"center"}
             >
-              <Text>{title}</Text>
+              {typeof title === "string" ? <Text>{title}</Text> : title}
               <ClientOnly fallback={<Skeleton boxSize="8" />}>
                 <IconButton
                   variant="ghost"

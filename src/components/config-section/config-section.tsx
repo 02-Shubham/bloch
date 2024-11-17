@@ -1,11 +1,15 @@
 import {
+  Box,
   Button,
   Card,
+  ClientOnly,
   GridItem,
   Group,
   HStack,
+  IconButton,
   Input,
   SimpleGrid,
+  Skeleton,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -17,6 +21,7 @@ import {
   LuCircle,
   LuCircleDashed,
   LuCircleDot,
+  LuHelpCircle,
   LuMove3D,
   LuRedo,
   LuShare,
@@ -60,6 +65,13 @@ import {
 import { useColorModeValue } from "@/components/ui/color-mode";
 import { toaster } from "@/components/ui/toaster";
 import { useSearchParams } from "next/navigation";
+import {
+  HoverCardArrow,
+  HoverCardContent,
+  HoverCardRoot,
+  HoverCardTrigger,
+} from "../ui/hover-card";
+import Latex from "react-latex-next";
 
 const math = create(all);
 
@@ -327,6 +339,9 @@ export const ConfigSection: React.FC = () => {
     ket1Error,
   ]);
 
+  /* const [statesHelpOpen, setStatesHelpOpen] = useState(false);
+  const [gatesHelpOpen, setGatesHelpOpen] = useState(false); */
+
   return (
     <VStack
       alignSelf={"stretch"}
@@ -335,93 +350,278 @@ export const ConfigSection: React.FC = () => {
       paddingLeft={{ base: 2, md: 0 }}
       paddingRight={{ base: 2, md: 12 }}
     >
-      <CollapsibleCard title="Gates">
+      <CollapsibleCard
+        title={
+          <HStack>
+            <Text>Gates</Text>
+            <HoverCardRoot
+              size="sm"
+              openDelay={500}
+              closeDelay={100}
+              /* open={gatesHelpOpen}
+              onOpenChange={(e) => setGatesHelpOpen(e.open)} */
+            >
+              <HoverCardTrigger asChild>
+                <Box display={{ base: "none", md: "block" }}>
+                  <ClientOnly fallback={<Skeleton boxSize="8" />}>
+                    <IconButton
+                      variant="ghost"
+                      aria-label="Info"
+                      size="sm"
+                      css={{
+                        _icon: {
+                          width: "5",
+                          height: "5",
+                        },
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        //setGatesHelpOpen(true);
+                      }}
+                    >
+                      <LuHelpCircle />
+                    </IconButton>
+                  </ClientOnly>
+                </Box>
+              </HoverCardTrigger>
+              <HoverCardContent width="432px" maxWidth={"432px"}>
+                <HoverCardArrow />
+                <Box width="400px" whiteSpace={"pre-line"}>
+                  <Latex>{String.raw`The well-known 1-bit quantum gates include the following:
+
+                  $-$ Pauli-X Gate ($X$)
+                  $-$ Pauli-Y Gate ($Y$)
+                  $-$ Pauli-Z Gate ($Z$)
+                  $-$ Hadamard Gate ($H$)
+                  $-$ Phase Gate ($P(\phi)$)
+                  $-$ Specific phase gates ($S, S^\dagger, T$)
+
+                  To apply a 1-bit quantum gate to a general quantum state \( \psi = a\ket{0} + b\ket{1} \), you represent the quantum state as a vector:
+                  \[
+                  \psi = \begin{bmatrix} a \\ b \end{bmatrix}
+                  \] Each gate corresponds to a specific unitary matrix \( U \). Applying the gate to the state involves multiplying the state vector by the gate matrix:
+                  \[
+                  \psi' = U \psi = U \begin{bmatrix} a \\ b \end{bmatrix}
+                  \] where \( \psi' \) is the transformed quantum state. This operation evolves the state based on the chosen gate's transformation properties.
+
+                  A quantum gate is valid if it is unitary, meaning its matrix representation \( U \) satisfies the following:
+                  \[
+                  U^\dagger U = U U^\dagger = I
+                  \]
+                  where \( U^\dagger \) is the conjugate transpose of \( U \).`}</Latex>
+                </Box>
+              </HoverCardContent>
+            </HoverCardRoot>
+          </HStack>
+        }
+      >
         <Group wrap={"wrap"}>
-          <Button
-            size={"sm"}
-            variant={"subtle"}
-            onClick={() => applyGate(XGate)}
-          >
-            <strong>X</strong>
-          </Button>
-          <Button
-            size={"sm"}
-            variant={"subtle"}
-            onClick={() => applyGate(YGate)}
-          >
-            <strong>Y</strong>
-          </Button>
-          <Button
-            size={"sm"}
-            variant={"subtle"}
-            onClick={() => applyGate(ZGate)}
-          >
-            <strong>Z</strong>
-          </Button>
-          <Button
-            size={"sm"}
-            variant={"subtle"}
-            onClick={() => applyGate(HGate)}
-          >
-            <strong>H</strong>
-          </Button>
-          <Group attached>
-            <Button
-              size={"sm"}
-              variant={"subtle"}
-              onClick={() =>
-                applyGate(PGate(calculatedPhiExpression, phiExpression))
-              }
-              disabled={phiError}
-            >
-              <strong>P</strong>(ϕ =
-            </Button>
-            <Input
-              size={"sm"}
-              placeholder="e^(pi*i)/sqrt(2)"
-              value={phiExpression}
-              onChange={handlePhiChange}
-              borderRadius={0}
-              borderColor={phiError ? "border.error" : "gray.subtle"}
-              width={"150px"}
-              marginRight={0}
-              _focus={{ outline: 0 }}
-              _active={{ outline: 0 }}
-            />
-            <Button
-              size={"sm"}
-              variant={"subtle"}
-              onClick={() =>
-                applyGate(PGate(calculatedPhiExpression, phiExpression))
-              }
-              disabled={phiError}
-            >
-              )
-            </Button>
-          </Group>
-          <Button
-            size={"sm"}
-            variant={"subtle"}
-            onClick={() => applyGate(SGate)}
-          >
-            <strong>S</strong>
-          </Button>
-          <Button
-            size={"sm"}
-            variant={"subtle"}
-            onClick={() => applyGate(SaGate)}
-          >
-            <strong>
-              S<sup>†</sup>
-            </strong>
-          </Button>
-          <Button
-            size={"sm"}
-            variant={"subtle"}
-            onClick={() => applyGate(TGate)}
-          >
-            <strong>T</strong>
-          </Button>
+          <HoverCardRoot size="sm" openDelay={500} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <Button
+                size={"sm"}
+                variant={"subtle"}
+                onClick={() => applyGate(XGate)}
+              >
+                <strong>X</strong>
+              </Button>
+            </HoverCardTrigger>
+            <HoverCardContent maxWidth="240px">
+              <HoverCardArrow />
+              <Box>
+                <Latex>
+                  {String.raw`
+                  $$
+                  X = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}
+                  $$
+                  The X gate flips the state of a qubit along the X-axis of the Bloch sphere.`}
+                </Latex>
+              </Box>
+            </HoverCardContent>
+          </HoverCardRoot>
+          <HoverCardRoot size="sm" openDelay={500} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <Button
+                size={"sm"}
+                variant={"subtle"}
+                onClick={() => applyGate(YGate)}
+              >
+                <strong>Y</strong>
+              </Button>
+            </HoverCardTrigger>
+            <HoverCardContent maxWidth="240px">
+              <HoverCardArrow />
+              <Box>
+                <Latex>
+                  {String.raw`$$
+                  Y = \begin{bmatrix} 0 & -i \\ i & 0 \end{bmatrix}
+                  $$
+                  The Y gate introduces a combined flip and phase change by rotating the qubit around the Y-axis of the Bloch sphere by π. `}
+                </Latex>
+              </Box>
+            </HoverCardContent>
+          </HoverCardRoot>
+          <HoverCardRoot size="sm" openDelay={500} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <Button
+                size={"sm"}
+                variant={"subtle"}
+                onClick={() => applyGate(ZGate)}
+              >
+                <strong>Z</strong>
+              </Button>
+            </HoverCardTrigger>
+            <HoverCardContent maxWidth="240px">
+              <HoverCardArrow />
+              <Box>
+                <Latex>
+                  {String.raw`$$
+                  Z = \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}
+                  $$
+                  The Z gate applies a phase flip, inverting the phase of the qubit's state along the Z-axis of the Bloch sphere. `}
+                </Latex>
+              </Box>
+            </HoverCardContent>
+          </HoverCardRoot>
+          <HoverCardRoot size="sm" openDelay={500} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <Button
+                size={"sm"}
+                variant={"subtle"}
+                onClick={() => applyGate(HGate)}
+              >
+                <strong>H</strong>
+              </Button>
+            </HoverCardTrigger>
+            <HoverCardContent maxWidth="240px">
+              <HoverCardArrow />
+              <Box>
+                <Latex>
+                  {String.raw`$$
+                  H = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 & 1 \\ 1 & -1 \end{bmatrix}
+                  $$
+                  The H gate creates superposition by equally distributing the qubit's probability amplitude between its computational basis states and rotating it between the X and Z axes.`}
+                </Latex>
+              </Box>
+            </HoverCardContent>
+          </HoverCardRoot>
+          <HoverCardRoot size="sm" openDelay={500} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <Group attached>
+                <Button
+                  size={"sm"}
+                  variant={"subtle"}
+                  onClick={() =>
+                    applyGate(PGate(calculatedPhiExpression, phiExpression))
+                  }
+                  disabled={phiError}
+                >
+                  <strong>P</strong>(ϕ =
+                </Button>
+                <Input
+                  size={"sm"}
+                  placeholder="e^(pi*i)/sqrt(2)"
+                  value={phiExpression}
+                  onChange={handlePhiChange}
+                  borderRadius={0}
+                  borderColor={phiError ? "border.error" : "gray.subtle"}
+                  width={"150px"}
+                  marginRight={0}
+                  _focus={{ outline: 0 }}
+                  _active={{ outline: 0 }}
+                />
+                <Button
+                  size={"sm"}
+                  variant={"subtle"}
+                  onClick={() =>
+                    applyGate(PGate(calculatedPhiExpression, phiExpression))
+                  }
+                  disabled={phiError}
+                >
+                  )
+                </Button>
+              </Group>
+            </HoverCardTrigger>
+            <HoverCardContent maxWidth="240px">
+              <HoverCardArrow />
+              <Box>
+                <Latex>
+                  {String.raw`$$
+                  P = \begin{bmatrix} 1 & 0 \\ 0 & e^{i\phi} \end{bmatrix}
+                  $$
+                  The P gate introduces a controlled phase shift to a qubit's state, effectively adding a phase factor proportional to a specified angle. `}
+                </Latex>
+              </Box>
+            </HoverCardContent>
+          </HoverCardRoot>
+          <HoverCardRoot size="sm" openDelay={500} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <Button
+                size={"sm"}
+                variant={"subtle"}
+                onClick={() => applyGate(SGate)}
+              >
+                <strong>S</strong>
+              </Button>
+            </HoverCardTrigger>
+            <HoverCardContent maxWidth="240px">
+              <HoverCardArrow />
+              <Box>
+                <Latex>
+                  {String.raw`$$
+                  S = \begin{bmatrix} 1 & 0 \\ 0 & i \end{bmatrix}
+                  $$
+                  The S gate applies a specific π/2 phase shift, introducing a quarter-turn rotation around the Z-axis. Basically it is a P(π/2) gate.`}
+                </Latex>
+              </Box>
+            </HoverCardContent>
+          </HoverCardRoot>
+          <HoverCardRoot size="sm" openDelay={500} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <Button
+                size={"sm"}
+                variant={"subtle"}
+                onClick={() => applyGate(SaGate)}
+              >
+                <strong>
+                  S<sup>†</sup>
+                </strong>
+              </Button>
+            </HoverCardTrigger>
+            <HoverCardContent maxWidth="240px">
+              <HoverCardArrow />
+              <Box>
+                <Latex>
+                  {String.raw`$$
+                  S^\dagger = \begin{bmatrix} 1 & 0 \\ 0 & -i \end{bmatrix}
+                  $$
+                  The $ S^\dagger $ gate reverses the effect of the S gate, applying a −π/2 phase shift and effectively performing the inverse rotation around the Z-axis. Basically it is a P(−π/2) gate.`}
+                </Latex>
+              </Box>
+            </HoverCardContent>
+          </HoverCardRoot>
+          <HoverCardRoot size="sm" openDelay={500} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <Button
+                size={"sm"}
+                variant={"subtle"}
+                onClick={() => applyGate(TGate)}
+              >
+                <strong>T</strong>
+              </Button>
+            </HoverCardTrigger>
+            <HoverCardContent maxWidth="240px">
+              <HoverCardArrow />
+              <Box>
+                <Latex>
+                  {String.raw`$$
+                  T = \begin{bmatrix} 1 & 0 \\ 0 & e^{i\pi/4} \end{bmatrix}
+                  $$
+                  The T gate introduces a precise π/4 phase shift, often used in fault-tolerant quantum computing to approximate arbitrary single-qubit operations. Basically it is a P(π/4) gate.`}
+                </Latex>
+              </Box>
+            </HoverCardContent>
+          </HoverCardRoot>
           <PopoverRoot>
             <PopoverTrigger asChild>
               <Button size={"sm"} variant={"subtle"}>
@@ -596,7 +796,74 @@ export const ConfigSection: React.FC = () => {
           </PopoverRoot>
         </Group>
       </CollapsibleCard>
-      <CollapsibleCard title="Current state">
+      <CollapsibleCard
+        title={
+          <HStack>
+            <Text>Current state</Text>
+            <HoverCardRoot
+              size="sm"
+              openDelay={500}
+              closeDelay={100}
+              /* open={statesHelpOpen}
+              onOpenChange={(e) => setStatesHelpOpen(e.open)} */
+            >
+              <HoverCardTrigger asChild>
+                <Box display={{ base: "none", md: "block" }}>
+                  <ClientOnly fallback={<Skeleton boxSize="8" />}>
+                    <IconButton
+                      variant="ghost"
+                      aria-label="Info"
+                      size="sm"
+                      css={{
+                        _icon: {
+                          width: "5",
+                          height: "5",
+                        },
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        //setStatesHelpOpen(true);
+                      }}
+                    >
+                      <LuHelpCircle />
+                    </IconButton>
+                  </ClientOnly>
+                </Box>
+              </HoverCardTrigger>
+              <HoverCardContent width="432px" maxWidth={"432px"}>
+                <HoverCardArrow />
+                <Box width="400px">
+                  <Latex>
+                    {String.raw`The two basis states:
+
+                    \[
+                    |0\rangle = \begin{pmatrix} 1 \\ 0 \end{pmatrix}, \quad |1\rangle = \begin{pmatrix} 0 \\ 1 \end{pmatrix}
+                    \]
+
+                    can represent any pure qubit state (ignoring global phase) using the following linear combination:
+
+                    \[
+                    |\psi\rangle = \cos\left(\frac{\theta}{2}\right)|0\rangle + \sin\left(\frac{\theta}{2}\right) e^{i\phi} |1\rangle = \begin{pmatrix} \alpha \\ \beta \end{pmatrix}
+                    \]
+
+                    Here, \(\theta\) is the polar angle, and \(\phi\) is the azimuthal angle. The state is represented on the Bloch sphere by a vector, where the angles \( \theta \) and \( \phi \) determine the direction of the vector. The Bloch vector is given by:
+
+                    \[
+                    \vec{r} = \begin{pmatrix} \sin \theta \cos \phi \\ \sin \theta \sin \phi \\ \cos \theta \end{pmatrix} = \begin{pmatrix} u \\ v \\ w \end{pmatrix}
+                    \]
+
+                    For the state to be valid, the following normalization condition must hold:
+                    \[
+                    |a|^2 + |b|^2 = 1
+                    \]
+                    This ensures that the total probability of measuring the qubit in either state \( |0\rangle \) or \( |1\rangle \) is 1. Here, \( |a|^2 \) is the probability of observing \( |0\rangle \), and \( |b|^2 \) is the probability of observing \( |1\rangle \).`}
+                  </Latex>
+                </Box>
+              </HoverCardContent>
+            </HoverCardRoot>
+          </HStack>
+        }
+      >
         <VStack w={"full"} gap={2} alignItems={"stretch"}>
           <HStack gapX={4} gapY={1} wrap={"wrap"}>
             <Text opacity={0.7}>Superposition state:</Text>
@@ -627,7 +894,7 @@ export const ConfigSection: React.FC = () => {
       </CollapsibleCard>
       <CollapsibleCard title="History">
         <VStack gap={4} alignSelf={"stretch"} alignItems={"stretch"}>
-          <Group wrap={"wrap"}>
+          <Group wrap={"wrap"} gap={1}>
             <Button
               size={"sm"}
               variant={"subtle"}
@@ -641,6 +908,7 @@ export const ConfigSection: React.FC = () => {
               variant={"subtle"}
               onClick={redo}
               disabled={!canRedo()}
+              marginRight={1}
             >
               <LuRedo /> Redo
             </Button>
@@ -952,18 +1220,18 @@ export const ConfigSection: React.FC = () => {
             <Input
               size={"sm"}
               placeholder="3"
+              width={"75px"}
               value={drawForValue}
               onChange={(e) => {
                 setDrawForValue(e.target.value);
               }}
               borderRadius={0}
               borderColor={drawForValueError ? "border.error" : "gray.subtle"}
-              width={"150px"}
               marginRight={0}
               _focus={{ outline: 0 }}
               _active={{ outline: 0 }}
             />
-            <Text> gate applied.</Text>
+            <Text> gate(s) applied.</Text>
           </HStack>
         </VStack>
       </CollapsibleCard>
