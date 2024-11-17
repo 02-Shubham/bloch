@@ -29,7 +29,7 @@ This project implements an interactive Bloch sphere what is a geometrical repres
 - **Comprehensive Qubit State Representation**:  
   - View the qubit state as a vector inside the Bloch sphere.  
   - Displays the current state in the form:  
-    **a|0⟩ + b|1⟩**.  
+    **$a|0\rangle + b|1\rangle$**.  
   - Examine the state’s coordinates in euclidean space and angular representation.
 - **History Tracking**: Undo actions with the history feature and share your progress.
 - **Undo**: Undos an action.
