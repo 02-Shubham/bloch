@@ -29,7 +29,7 @@ export default function Home() {
             ? undefined
             : currentHistoryIndex + 1,
         );
-
+ 
   return (
     <Box
       display={"flex"}
