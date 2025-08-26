@@ -1,7 +1,7 @@
 "use client";
 import { BlochSphere } from "@/components/bloch-sphere/bloch-sphere";
 import { ConfigSection } from "@/components/config-section/config-section";
-import { GithubButton } from "@/components/github-icon/github-icon";
+// import { GithubButton } from "@/components/github-icon/github-icon";
 import { HelpButton } from "@/components/help-icon/help-icon";
 import { Logo } from "@/components/logo/logo";
 import { ColorModeButton } from "@/components/ui/color-mode";
@@ -45,9 +45,9 @@ export default function Home() {
       <Box position={"absolute"} top={"6px"} right={"6px"} zIndex={100}>
         <ColorModeButton />
       </Box>
-      <Box position={"absolute"} top={"6px"} right={"48px"} zIndex={100}>
+      {/* <Box position={"absolute"} top={"6px"} right={"48px"} zIndex={100}>
         <GithubButton />
-      </Box>
+      </Box> */}
       <Box position={"absolute"} top={"6px"} right={"90px"} zIndex={100}>
         <HelpButton />
       </Box>
