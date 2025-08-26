@@ -1,9 +1,8 @@
 "use client";
 import { BlochSphere } from "@/components/bloch-sphere/bloch-sphere";
 import { ConfigSection } from "@/components/config-section/config-section";
-// import { GithubButton } from "@/components/github-icon/github-icon";
 import { HelpButton } from "@/components/help-icon/help-icon";
-import { Logo } from "@/components/logo/logo";
+// import { Logo } from "@/components/logo/logo";
 import { ColorModeButton } from "@/components/ui/color-mode";
 import { useAppContext } from "@/state/app-context";
 import { Box, Stack, VStack } from "@chakra-ui/react";
@@ -39,9 +38,9 @@ export default function Home() {
       maxHeight={"100vh"}
       overflow={"hidden"}
     >
-      <Box position={"absolute"} top={"6px"} left={"6px"} zIndex={100}>
+      {/* <Box position={"absolute"} top={"6px"} left={"6px"} zIndex={100}>
         <Logo />
-      </Box>
+      </Box> */}
       <Box position={"absolute"} top={"6px"} right={"6px"} zIndex={100}>
         <ColorModeButton />
       </Box>
